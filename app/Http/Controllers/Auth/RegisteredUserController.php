@@ -28,7 +28,7 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -43,6 +43,24 @@ class RegisteredUserController extends Controller
         ]);
 
         event(new Registered($user));
+
+        if ($request->expectsJson()) {
+            $token = $user->createToken('auth_token')->plainTextToken;
+            
+            return response()->json([
+                'status' => 'success',
+                'message' => 'User registered successfully',
+                'data' => [
+                    'user' => [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'email' => $user->email,
+                    ],
+                    'token' => $token,
+                    'token_type' => 'Bearer'
+                ]
+            ], 201);
+        }
 
         Auth::login($user);
 

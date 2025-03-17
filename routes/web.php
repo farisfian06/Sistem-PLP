@@ -27,7 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/admin', [AdminController::class, 'index'])->middleware([RoleMiddleware::class . ':Kaprodi'])->name('admin');
+Route::get('/admin', [LogbookController::class, 'index'])->middleware('role:Mahasiswa')->name('admin');
 Route::post('/logbooks', [LogbookController::class, 'store'])->middleware('auth')->name('logbooks.store');
 
 require __DIR__.'/auth.php';
