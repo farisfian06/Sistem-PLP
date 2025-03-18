@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\KeminatanController;
 use App\Http\Controllers\LogbookController;
+use App\Http\Controllers\SmkController;
+use App\Http\Controllers\PendaftaranPlpController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,7 +19,27 @@ Route::middleware('auth:sanctum')->group(function () {
         return  response()->json($request->user());
     });
 
-    Route::get('/logbooks', [LogbookController::class, 'index'])->middleware('role:Kaprodi,Mahasiswa');
-    Route::post('/logbooks', [LogbookController::class, 'store']);
+    Route::prefix('/logbook')->group(function () {
+        Route::get('/', [LogbookController::class, 'index'])->middleware('role:Kaprodi,Mahasiswa');
+        Route::get('/all', [LogbookController::class, 'indexAll'])->middleware('role:Kaprodi');
+        Route::post('/', [LogbookController::class, 'store'])->middleware('role:Mahasiswa');
+    });
+
+    Route::prefix('smk')->group(function () {
+        Route::get('/', [SmkController::class, 'index'])->middleware('role:Kaprodi,Dosen Koordinator,Akademik');
+        Route::post('/', [SmkController::class, 'store'])->middleware('role:Kaprodi,Dosen Koordinator,Akademik');
+    });
+
+    Route::prefix('keminatan')->group(function () {
+        Route::get('/', [KeminatanController::class, 'index']);
+        Route::post('/', [KeminatanController::class, 'store'])->middleware('role:Kaprodi,Dosen Koordinator,Akademik');
+    });
+
+    Route::prefix('pendaftaran-plp')->group(function () {
+        Route::get('/', [PendaftaranPlpController::class, 'index']);
+        Route::get('/all', [PendaftaranPlpController::class, 'indexAll'])->middleware('role:Kaprodi,Dosen Koordinator,Akademik');
+        Route::post('/', [PendaftaranPlpController::class, 'store'])->middleware('role:Mahasiswa');
+        Route::patch('/{id}', [PendaftaranPlpController::class, 'assign'])->middleware('role:Kaprodi,Dosen Koordinator');
+    });
 });
 

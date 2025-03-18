@@ -14,6 +14,12 @@ class LogbookController extends Controller
         return response()->json($logbooks);
     }
 
+    public function indexAll()
+    {
+        $logbooks = Logbook::latest()->get();
+        return response()->json($logbooks);
+    }
+
     /**
      * Menyimpan logbook baru.
      */
