@@ -12,7 +12,8 @@ class Logbook extends Model
         'keterangan',
         'mulai',
         'selesai',
-        'dokumentasi'
+        'dokumentasi',
+        'status',
     ];
 
     public function user()
