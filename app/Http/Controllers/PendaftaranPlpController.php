@@ -1,0 +1,105 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\PendaftaranPlp;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class PendaftaranPlpController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $pendaftaranPlp = PendaftaranPlp::where('user_id', Auth::id())->latest()->get();
+        return response()->json($pendaftaranPlp);
+    }
+
+    public function indexAll()
+    {
+        $pendaftaranPlp = PendaftaranPlp::all();
+        return response()->json($pendaftaranPlp);
+    }
+
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        {
+            $request->validate([
+                'keminatan_id' => 'required|exists:keminatans,id',
+                'nilai_plp_1' => 'required|in:A,B+,B,C+,C,D,E,Belum',
+                'nilai_micro_teaching' => 'required|in:A,B+,B,C+,C,D,E,Belum',
+                'pilihan_smk_1' => 'required|exists:smks,id',
+                'pilihan_smk_2' => 'required|exists:smks,id',
+            ]);
+
+            $pendaftaranPlp = PendaftaranPlp::create([
+                'user_id' => Auth::id(),
+                'keminatan_id' => $request->keminatan_id,
+                'nilai_plp_1' => $request->nilai_plp_1,
+                'nilai_micro_teaching' => $request->nilai_micro_teaching,
+                'pilihan_smk_1' => $request->pilihan_smk_1,
+                'pilihan_smk_2' => $request->pilihan_smk_2,
+            ]);
+
+            return response()->json([
+                'message' => 'Pendaftaran PLP berhasil dibuat',
+                'pendaftaran_plp' => $pendaftaranPlp
+            ], 201);
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function assign(Request $request, string $id)
+    {
+        // Find the Pendaftaran PLP record by ID
+        $pendaftaran = PendaftaranPlp::findOrFail($id);
+
+        // Validate the request data
+        $validatedData = $request->validate([
+            'penempatan' => 'exists:smks,id',
+            'dosen_pembimbing' => 'exists:users,id',
+        ]);
+
+        // Update the Pendaftaran PLP record
+        $pendaftaran->update($validatedData);
+
+        // Return a JSON response
+        return response()->json([
+            'message' => 'Berhasil menambahkan penempatan dan dosen pembimbing',
+            'pendaftaran' => $pendaftaran
+        ]);
+    }
+
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
+}
