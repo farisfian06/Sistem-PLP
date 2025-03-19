@@ -47,7 +47,7 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    
+
     public function hasRole($role)
     {
         return $this->role === $role;
@@ -56,5 +56,18 @@ class User extends Authenticatable
     public function hasAnyRole(array $roles)
     {
         return in_array($this->role, $roles);
+    }
+
+    public function mahasiswaPamong()
+    {
+        return $this->belongsTo(User::class, 'guru_id');
+    }
+
+    /**
+     * The users that were referred by this user.
+     */
+    public function guruPamong()
+    {
+        return $this->hasMany(User::class, 'guru_id');
     }
 }
