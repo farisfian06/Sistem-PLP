@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Auth\RegisteredGuruPamongContoller;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\KeminatanController;
 use App\Http\Controllers\LogbookController;
@@ -14,20 +13,16 @@ Route::post('/register', [RegisteredUserController::class, 'store']);
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth:sanctum');
 
-Route::group(['prefix' => 'guru-pamong'], function () {
-    Route::post('/register', [RegisteredGuruPamongContoller::class, 'store']);
-});
 
 Route::middleware('auth:sanctum')->group(function () {
 
-    Route::group(['prefix' => 'guru-pamong'], function () {
-        Route::put('/logbook/validasi/{id}', [LogbookController::class, 'updateStatus'])->name('logbooks.updateStatus');
-    });
+    Route::post('/pembuatan-akun', [RegisteredUserController::class, 'pembuatanAkun'])->middleware('role:Akademik');
 
     Route::prefix('/logbooks')->group(function () {
         Route::get('/', [LogbookController::class, 'index'])->middleware('role:Kaprodi,Mahasiswa');
-        Route::get('/all', [LogbookController::class, 'indexAll'])->middleware('role:Kaprodi');
         Route::post('/', [LogbookController::class, 'store'])->middleware('role:Mahasiswa');
+        Route::get('/all', [LogbookController::class, 'indexAll'])->middleware('role:Kaprodi');
+        Route::put('/validasi/{id}', [LogbookController::class, 'updateStatus'])->middleware('role:Guru,Dosen Pembimbing');
     });
 
     Route::prefix('smk')->group(function () {
@@ -46,5 +41,4 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [PendaftaranPlpController::class, 'store'])->middleware('role:Mahasiswa');
         Route::patch('/{id}', [PendaftaranPlpController::class, 'assign'])->middleware('role:Kaprodi,Dosen Koordinator');
     });
-
 });
