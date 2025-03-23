@@ -32,21 +32,25 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'role' => 'nullable|in:Kaprodi,Dosen Koordinator,Dosen Pembimbing,Akademik,Mahasiswa,Observer,Guru',
+            'details' => 'nullable|array'
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $request->role,
+            'details' => json_encode($request->details)
         ]);
 
         event(new Registered($user));
 
         if ($request->expectsJson()) {
             $token = $user->createToken('auth_token')->plainTextToken;
-            
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'User registered successfully',
@@ -55,6 +59,8 @@ class RegisteredUserController extends Controller
                         'id' => $user->id,
                         'name' => $user->name,
                         'email' => $user->email,
+                        'role' => $user->role,
+                        'details' => $user->details
                     ],
                     'token' => $token,
                     'token_type' => 'Bearer'
@@ -65,5 +71,40 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         return redirect(route('dashboard', absolute: false));
+    }
+
+    public function pembuatanAkun(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'role' => 'required|in:Kaprodi,Dosen Koordinator,Dosen Pembimbing,Akademik,Mahasiswa,Observer,Guru',
+            'details' => 'nullable|array'
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => $request->role,
+            'details' => json_encode($request->details)
+        ]);
+
+        event(new Registered($user));
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'User registered successfully',
+            'data' => [
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                    'details' => $user->details
+                ],
+            ]
+        ], 201);
     }
 }
