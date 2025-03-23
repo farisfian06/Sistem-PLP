@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Logbook;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,6 +18,32 @@ class LogbookController extends Controller
     public function indexAll()
     {
         $logbooks = Logbook::latest()->get();
+        return response()->json($logbooks);
+    }
+
+    public function indexByGuru()
+    {
+        $user = Auth::user();
+
+        $mahasiswaIds = User::where('guru_id', $user->id)->pluck('id');
+
+        $logbooks = Logbook::whereIn('user_id', $mahasiswaIds)->with('user:id,name')->latest()->get();
+
+        $logbooks->transform(function ($logbook) {
+            return [
+                'id' => $logbook->id,
+                'user' => $logbook->user->name, // Jika user ada, tampilkan namanya
+                'tanggal' => $logbook->tanggal,
+                'keterangan' => $logbook->keterangan,
+                'mulai' => $logbook->mulai,
+                'selesai' => $logbook->selesai,
+                'dokumentasi' => $logbook->dokumentasi,
+                'created_at' => $logbook->created_at,
+                'updated_at' => $logbook->updated_at,
+                'status' => $logbook->status,
+            ];
+        });
+
         return response()->json($logbooks);
     }
 
