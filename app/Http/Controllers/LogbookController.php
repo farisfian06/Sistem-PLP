@@ -74,20 +74,20 @@ class LogbookController extends Controller
         return response()->json(['message' => 'Logbook berhasil diperbarui', 'logbook' => $logbook]);
     }
 
+    /**
+     * Memperbarui status logbook.
+     */
     public function updateStatus(Request $request, $id)
     {
-        // Validate the request
         $request->validate([
             'status' => 'required|string|in:pending,approved,rejected',
         ]);
 
         $logbook = Logbook::findOrFail($id);
 
-        // Update the status
         $logbook->status = $request->status;
         $logbook->save();
 
-        // Return a response
         return response()->json([
             'message' => 'Logbook status updated successfully',
             'logbook' => $logbook,
