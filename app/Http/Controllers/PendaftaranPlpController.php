@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PendaftaranPlp;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,13 +15,13 @@ class PendaftaranPlpController extends Controller
     public function index()
     {
         $pendaftaranPlp = PendaftaranPlp::where('user_id', Auth::id())->latest()->get();
-        return response()->json($pendaftaranPlp);
+        return Inertia::render('PendaftaranPlp');
     }
 
     public function indexAll()
     {
         $pendaftaranPlp = PendaftaranPlp::all();
-        return response()->json($pendaftaranPlp);
+        return Inertia::render('PendaftaranPlp');
     }
 
 

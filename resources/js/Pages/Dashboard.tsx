@@ -1,26 +1,19 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import SidebarComponent from "@/Components/SidebarComponent";
 import { Head } from '@inertiajs/react';
 
-export default function Dashboard() {
+const Dashboard: React.FC = () => {
     return (
-        <AuthenticatedLayout
-            header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Dashboard
-                </h2>
-            }
-        >
-            <Head title="Dashboard" />
-
-            <div className="py-12">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900">
-                            You're logged in!
-                        </div>
-                    </div>
-                </div>
+        <div className="flex flex-col lg:flex-row">
+            {/* Sidebar */}
+            <div className="lg:w-1/4">
+                <SidebarComponent />
             </div>
-        </AuthenticatedLayout>
+            {/* Konten Utama */}
+            <div className="flex-1 p-6 w-full lg:w-3/4">
+                <Head title="Dashboard" />
+            </div>
+        </div>
     );
-}
+};
+
+export default Dashboard;

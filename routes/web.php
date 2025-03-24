@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LogbookController;
+use App\Http\Controllers\PendaftaranPlpController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Foundation\Application;
@@ -26,6 +27,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+// Menampilkan halaman daftar PLP (untuk user yang sudah login)
+Route::get('/pendaftaran-plp', [PendaftaranPlpController::class, 'index'])->name('pendaftaran-plp.index');
+
+// Menyimpan data pendaftaran PLP
+Route::post('/pendaftaran-plp', [PendaftaranPlpController::class, 'store'])->name('pendaftaran-plp.store');
 
 Route::get('/admin', [LogbookController::class, 'index'])->middleware('role:Mahasiswa')->name('admin');
 Route::post('/logbooks', [LogbookController::class, 'store'])->middleware('auth')->name('logbooks.store');
