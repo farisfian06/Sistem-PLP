@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Keminatan;
 use App\Models\PendaftaranPlp;
+use App\Models\Smk;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,8 +16,13 @@ class PendaftaranPlpController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
+        $smks = Smk::orderBy('name')->get(['id', 'name']);
+        $keminatans = Keminatan::orderBy('name')->get(['id', 'name']);
         $pendaftaranPlp = PendaftaranPlp::where('user_id', Auth::id())->latest()->get();
-        return Inertia::render('PendaftaranPlp');
+        return Inertia::render('PendaftaranPlp',
+            ['user' => $user, 'smks' => $smks, 'keminatans' => $keminatans, 'pendaftaranPlp' => $pendaftaranPlp]
+        );
     }
 
     public function indexAll()
@@ -48,10 +55,7 @@ class PendaftaranPlpController extends Controller
                 'pilihan_smk_2' => $request->pilihan_smk_2,
             ]);
 
-            return response()->json([
-                'message' => 'Pendaftaran PLP berhasil dibuat',
-                'pendaftaran_plp' => $pendaftaranPlp
-            ], 201);
+            return redirect()->back()->with('success', 'Message');
         }
     }
 
