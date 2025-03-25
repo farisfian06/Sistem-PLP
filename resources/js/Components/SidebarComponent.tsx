@@ -45,7 +45,7 @@ const SidebarComponent: React.FC = () => {
     <div>
       {/* Sidebar untuk lg-screens */}
       <div
-        className={`fixed h-screen dark w-80 bg-slate-100 text-gray-800 p-3 rounded-lg shadow-xl transition-all duration-300 ease-in-out ${isOpen ? 'block' : 'hidden'} lg:block`}
+        className={`z-30 fixed h-screen dark w-80 bg-slate-100 text-gray-800 p-3 rounded-lg shadow-xl transition-all duration-300 ease-in-out ${isOpen ? 'block' : 'hidden'} lg:block`}
       >
         <ul className="flex flex-col h-full justify-between">
             <div className={"flex flex-col "}>
@@ -89,7 +89,7 @@ const SidebarComponent: React.FC = () => {
 
         {/* Toggle button untuk sm-screen */}
         <button
-            className="lg:hidden fixed top-3 left-2 text-black p-3 rounded-full shadow-lg focus:outline-none"
+            className="z-40 lg:hidden fixed top-3 left-2 text-black p-3 rounded-full shadow-lg focus:outline-none"
             onClick={() => setIsOpen(!isOpen)}
         >
             {isOpen ? (
