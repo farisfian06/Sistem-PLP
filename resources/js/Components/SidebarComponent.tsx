@@ -38,7 +38,7 @@ const SidebarComponent: React.FC = () => {
   const navItems: NavItem[] = [
     { href: route('dashboard'), label: "Dashboard", icon: <HiChartPie className="mr-3 text-xl" /> },
     { href: route('pendaftaran-plp.store'), label: "Pendaftaran Plp", icon: <HiDocumentAdd className="mr-3 text-xl" /> },
-    { href: route('logbooks.store'), label: "Logbook", icon: <HiBookOpen className="mr-3 text-xl" /> },
+    { href: route('logbooks.index'), label: "Logbook", icon: <HiBookOpen className="mr-3 text-xl" /> },
   ];
 
   return (

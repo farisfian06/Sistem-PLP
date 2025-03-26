@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Logbook;
 use App\Models\User;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,13 +13,17 @@ class LogbookController extends Controller
     public function index()
     {
         $logbooks = Logbook::where('user_id', Auth::id())->latest()->get();
-        return response()->json($logbooks);
+        return Inertia::render('Logbooks', [
+            'logbooks' => $logbooks
+        ]);
     }
 
     public function indexAll()
     {
         $logbooks = Logbook::latest()->get();
-        return response()->json($logbooks);
+        return Inertia::render('Logbooks', [
+            'logbooks' => $logbooks
+        ]);
     }
 
     public function indexByGuru()
@@ -69,7 +74,8 @@ class LogbookController extends Controller
             'dokumentasi' => $request->dokumentasi,
         ]);
 
-        return response()->json(['message' => 'Logbook berhasil dibuat', 'logbook' => $logbook], 201);
+        return redirect()->route('logbooks.index')->with('success', 'Logbook berhasil ditambahkan!');
+
     }
 
     /**
@@ -98,7 +104,8 @@ class LogbookController extends Controller
 
         $logbook->update($request->all());
 
-        return response()->json(['message' => 'Logbook berhasil diperbarui', 'logbook' => $logbook]);
+        return redirect()->route('logbooks.index')->with('success', 'Logbook berhasil diperbarui!');
+
     }
 
     /**
@@ -129,6 +136,7 @@ class LogbookController extends Controller
         $logbook = Logbook::where('user_id', Auth::id())->findOrFail($id);
         $logbook->delete();
 
-        return response()->json(['message' => 'Logbook berhasil dihapus']);
+        return redirect()->route('logbooks.index')->with('success', 'Logbook berhasil dihapus!');
+
     }
 }
