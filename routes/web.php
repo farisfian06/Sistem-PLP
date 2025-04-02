@@ -55,4 +55,8 @@ Route::get('/logbooks/{id}', [LogbookController::class, 'show'])->name('logbooks
 // Route::get('/admin', [LogbookController::class, 'index'])->middleware('role:Mahasiswa')->name('admin');
 // Route::post('/logbooks', [LogbookController::class, 'store'])->middleware('auth')->name('logbooks.store');
 
+Route::get('/validasi-logbook', function () {
+    return Inertia::render('ValidasiLogbook');
+});
+
 require __DIR__.'/auth.php';
