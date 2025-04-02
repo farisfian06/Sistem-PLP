@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import SidebarComponent from "@/Components/SidebarComponent";
 import {HiCheckCircle, HiExclamation} from "react-icons/hi";
+import { TextInput, Label, Select, Button, Alert } from "flowbite-react";
 import {Head, router, usePage} from "@inertiajs/react";
 
 // model props user yang diambil
@@ -158,7 +159,6 @@ export default function PendaftaranPlp() {
                 value: keminatan.id,
                 label: keminatan.name
             })),
-            isLarge: true,
         },
         {
             label: "Nilai PLP 1",
@@ -219,60 +219,45 @@ export default function PendaftaranPlp() {
         },
     ];
 
-    // @ts-ignore
     return (
         <div className="flex flex-col lg:flex-row">
-            {/* Sidebar */}
-            <div className="lg:w-80">
-                <SidebarComponent/>
-            </div>
-            {/* Konten Utama */}
-            <div className="flex-1 p-6 w-full lg:w-3/4">
-                <Head title="Pendaftaran PLP"/>
-                <h2 className="text-2xl font-extrabold py-6 ">Pendaftaran PLP</h2>
+        <Head title="PendaftaranPLP" />
+        <div className="lg:w-1/4">
+            <SidebarComponent />
+        </div>
+        <div className="lg:w-3/4 p-12">
+        <h2 className="text-lg font-semibold mb-4">Formulir Pendaftaran PLP</h2>
 
-                {/* Menampilkan pesan status pendaftaran */}
-                {statusPendaftaran && (
-                    <div
-                        className="flex items-center p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50"
-                        role="alert">
-                        <HiExclamation size={20} className="mr-2"/>
-                        <span className="sr-only">Info</span>
-                        <div>
-                            <span className="font-bold">Pendaftaran berhasil! </span>
-                            <span
-                                className="text-sm">{statusPendaftaran.replace("Pendaftaran berhasil!", "").trim()}</span>
-                        </div>
-                    </div>
-                )}
+        {/* Menampilkan pesan status pendaftaran */}
+        {statusPendaftaran && (
+            <Alert color="success" icon={HiExclamation} className="mb-6">
+                <span className="font-bold">Pendaftaran berhasil!</span> {statusPendaftaran.replace("Pendaftaran berhasil!", "").trim()}
+            </Alert>
+        )}
 
-
-                {/* Menampilkan pesan error jika ada */}
-                {errorMessage && (
-                    <div
-                        className="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50"
-                        role="alert">
-                        <HiCheckCircle size={20} className="mr-2"/>
-                        <span className="sr-only">Info</span>
-                        <div>
-                            <span className="font-medium">Pendaftaran gagal!</span> {errorMessage}
-                        </div>
-                    </div>
-                )}
+        {/* Menampilkan pesan error jika ada */}
+        {errorMessage && (
+            <Alert color="failure" icon={HiCheckCircle} className="mb-6">
+                <span className="font-medium">Pendaftaran gagal!</span> {errorMessage}
+            </Alert>
+        )}
 
                 <form onSubmit={handleSubmit}
-                      className="mt-4 p-4 bg-white border rounded grid grid-cols-1 grid-cols-2 gap-4">
+                      className="max-w-4xl mx-auto p-4 border rounded-lg shadow-lg bg-white"
+                    >
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     {/* Render form fields */}
                     {formFields.map((field, index) => (
-                        <div className={`mb-4 ${field.isLarge ? 'col-span-2' : ''}`} key={index}>
-                            <span className="block text-sm">{field.label}</span>
+                        <div className={`mb-4 ${field.name === 'bidangKeahlian' ? 'lg:col-span-2' : ''}`} key={index}>
+                             <Label htmlFor={field.name}>{field.label}</Label>
                             {field.type === "select" ? (
-                                <select
+                                <Select
+                                    id={field.name}                                
                                     name={field.name}
                                     value={field.value}
                                     onChange={handleChange}
-                                    className={`bg-gray-100 p-2 w-full rounded border-gray-300 ${sudahDaftar && "cursor-not-allowed "}`}
                                     disabled={sudahDaftar}
+                                    className="w-full"
                                 >
                                     <option value="" disabled hidden>
                                         {field.placeholder}
@@ -282,26 +267,27 @@ export default function PendaftaranPlp() {
                                             {option.label}
                                         </option>
                                     ))}
-                                </select>
+                                </Select>
                             ) : (
-                                <input
+                                <TextInput
+                                    id={field.name}                                
                                     type={field.type}
                                     name={field.name}
                                     value={field.value}
                                     onChange={handleChange}
-                                    className="bg-gray-100 text-neutral-600 p-2 w-full rounded cursor-not-allowed border-gray-300"
+                                    className="w-full"
                                     placeholder={field.placeholder}
                                     disabled
                                 />
                             )}
                         </div>
                     ))}
-
-                    <button type="submit"
+            </div>
+                    <Button type="submit"
                             disabled={sudahDaftar}
-                            className={`text-white w-fit font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none  ${sudahDaftar ? "cursor-not-allowed bg-neutral-500 " : "bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 "}`}>
+                            className={`w-fit text-white px-5 py-2.5 ${sudahDaftar ? "cursor-not-allowed bg-neutral-500 " : "bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 "}`}>
                         Daftar PLP
-                    </button>
+                    </Button>
                 </form>
             </div>
         </div>
