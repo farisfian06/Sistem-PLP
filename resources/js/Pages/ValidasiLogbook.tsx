@@ -1,6 +1,7 @@
 import { Button, Table, TableHead, TableBody, TableRow, TableCell, TableHeadCell, Select, Checkbox } from "flowbite-react";
 import { useState } from "react";
 import SidebarComponent from "@/Components/SidebarComponent";
+import {Head, router, usePage} from "@inertiajs/react";
 
 // Dummy data
 const dummyLogbooks = [
@@ -51,10 +52,9 @@ const ValidasiLogbook = () => {
 
   return (
     <div className="flex flex-col lg:flex-row">
-      <div className="lg:w-80">
+      <Head title="Validasi Logbook" />
         <SidebarComponent />
-      </div>
-      <div className="flex-1 p-8 mt-8">
+      <div className="flex-1 p-6 lg:ml-64 mt-16">
         <h1 className="text-xl font-bold">Validasi Logbook</h1>
         <div className="mt-4 p-4 border rounded-lg bg-white shadow-md">
 

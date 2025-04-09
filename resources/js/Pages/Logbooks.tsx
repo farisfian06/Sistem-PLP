@@ -22,10 +22,8 @@ const Logbooks = () => {
 
   return (
     <div className="flex flex-col lg:flex-row">
-      <div className="lg:w-80">
         <SidebarComponent />
-      </div>
-      <div className="flex-1 p-8 mt-8">
+      <div className="flex-1 p-6 lg:ml-64 mt-16">
         <Head title="Logbook" />
         <h1 className="text-xl font-bold">Logbook</h1>
         <div className="mt-4 p-4 border rounded-lg bg-white shadow-md">
@@ -67,10 +65,10 @@ const Logbooks = () => {
                           setShowAddUpdateLogbook(true);
                         }}
                       >
-                        <HiPencil className="w-5 h-5" />
+                        <HiPencil className="w-4 h-4" />
                       </Button>
                       <Button onClick={() => handleLogbookDelete(item.id)} className="text-red-500">
-                        <HiTrash className="w-5 h-5" />
+                        <HiTrash className="w-4 h-4" />
                       </Button>
                     </TableCell>
                   </TableRow>

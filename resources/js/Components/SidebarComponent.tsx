@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { HiChartPie,HiDocumentAdd, HiBookOpen, HiCubeTransparent, HiUser, HiLogout, HiMenu, HiX} from "react-icons/hi";
-import { FaUserCircle } from "react-icons/fa";
+import { HiChartPie,HiDocumentAdd, HiBookOpen, HiCubeTransparent, HiUser} from "react-icons/hi";
 import {Link, router, usePage} from "@inertiajs/react";
 
 interface NavItem {
   href: string;
   label: string;
-  icon: React.ReactNode;
+  icon: JSX.Element;
 }
 
 // model props yang diambil
@@ -26,7 +25,8 @@ declare module '@inertiajs/core' {
 }
 
 const SidebarComponent: React.FC = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
     const {auth} = usePage().props;
 
   // Handle logout
@@ -36,70 +36,98 @@ const SidebarComponent: React.FC = () => {
 
   // sidebar Items
   const navItems: NavItem[] = [
-    { href: route('dashboard'), label: "Dashboard", icon: <HiChartPie className="mr-3 text-xl" /> },
-    { href: route('pendaftaran-plp.store'), label: "Pendaftaran Plp", icon: <HiDocumentAdd className="mr-3 text-xl" /> },
-    { href: route('logbooks.index'), label: "Logbook", icon: <HiBookOpen className="mr-3 text-xl" /> },
+    { href: route('dashboard'), label: "Dashboard", icon: <HiChartPie className="w-5 h-5" /> },
+    { href: route('pendaftaran-plp.store'), label: "Pendaftaran Plp", icon: <HiDocumentAdd className="w-5 h-5" /> },
+    { href: route('logbooks.index'), label: "Logbook", icon: <HiBookOpen className="w-5 h-5" /> },
   ];
 
   return (
-    <div>
-      {/* Sidebar untuk lg-screens */}
-      <div
-        className={`z-30 fixed h-screen dark w-80 bg-slate-100 text-gray-800 p-3 rounded-lg shadow-xl transition-all duration-300 ease-in-out ${isOpen ? 'block' : 'hidden'} lg:block`}
-      >
-        <ul className="flex flex-col h-full justify-between">
-            <div className={"flex flex-col "}>
-                <li>
-                    <h2 className="text-xl font-semibold p-3 flex items-center mt-3 mb-3">
-                        <HiCubeTransparent className=" mr-2 text-indigo-500"/> Sistem Informasi PLP
-                    </h2>
-                </li>
-                {navItems.map((item, index) => (
-                    <li key={index}>
-                        <Link
-                            href={item.href}
-                            className="hover:text-indigo-500 hover:bg-slate-200 p-3 flex items-center transition-all duration-200 ease-in-out rounded-xl">
-                            {item.icon}
-                            {item.label}
-                        </Link>
-                    </li>
-                ))}
-            </div>
-            <div className={"space-y-2 flex flex-col "}>
-                <li>
-                    <button
-                        onClick={handleLogout}
-                        className="hover:text-indigo-500 hover:bg-slate-200 p-3 flex items-center w-full text-left transition-all duration-200 ease-in-out rounded-xl"
-                    >
-                        <HiLogout className="mr-3 text-xl"/>
-                        Logout
-                    </button>
-                </li>
-                <li>
-                    <Link
-                        href={"#"}
-                        className="hover:text-indigo-500 hover:bg-slate-200 p-3 flex items-center transition-all duration-200 ease-in-out rounded-xl">
-                        <FaUserCircle className="mr-3 text-xl" />
-                        {auth.user && auth.user.name}
-                    </Link>
-                </li>
-            </div>
-        </ul>
-      </div>
+    <>
+      {/* Top Navbar */}
+      <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+        <div className="px-3 py-3 lg:px-5 lg:pl-3 flex items-center justify-between">
+          <div className="flex items-center">
+            {/* Toggle Sidebar Button */}
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              type="button"
+              className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
+            >
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+            <span className="flex items-center ms-2 text-xl font-semibold text-gray-900 dark:text-white">
+              <HiCubeTransparent className="mr-2 text-indigo-500" />
+              Sistem Informasi PLP
+            </span>
+          </div>
 
-        {/* Toggle button untuk sm-screen */}
-        <button
-            className="z-40 lg:hidden fixed top-3 left-2 text-black p-3 rounded-full shadow-lg focus:outline-none"
-            onClick={() => setIsOpen(!isOpen)}
-        >
-            {isOpen ? (
-                <HiX
-                    className="text-2xl" />
-        ) : (
-          <HiMenu className="text-2xl" />
-        )}
-      </button>
-    </div>
+          {/* User Dropdown */}
+          <div className="relative ml-auto">
+            <button
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full focus:ring-2 focus:ring-gray-300 dark:bg-white dark:focus:ring-gray-600"
+            >
+              <span className="sr-only">Open user menu</span>
+              <HiUser className="w-6 h-6 text-gray-700 dark:text-gray-900" />
+            </button>
+            {dropdownOpen && (
+              <div className="absolute right-0 z-50 mt-2 w-48 bg-white rounded-md shadow-lg dark:bg-gray-700">
+               <Link href={route('profile.edit')}>
+                <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                  {auth.user?.name}
+                  <div className="text-xs text-gray-500 dark:text-gray-300">{auth.user?.angkatan}</div>
+                </div>
+                </Link>
+                <ul>
+                  <li>
+                    <Link href={route('dashboard')} className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white">Dashboard</Link>
+                  </li>
+                  <li>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white"
+                    >
+                      Logout
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
+      </nav>
+
+      {/* Sidebar */}
+      <aside
+        id="logo-sidebar"
+        className={`fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        } sm:translate-x-0 bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700`}
+        aria-label="Sidebar"
+      >
+          <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+            <ul className="space-y-2">
+              {navItems.map((item, index) => (
+                <li key={index}>
+                  <Link
+                    href={item.href}
+                    className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    {item.icon}
+                    <span className="ml-3">{item.label}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+      </aside>
+    </>
   );
 };
 

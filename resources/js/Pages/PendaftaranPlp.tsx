@@ -222,28 +222,26 @@ export default function PendaftaranPlp() {
     return (
         <div className="flex flex-col lg:flex-row">
         <Head title="PendaftaranPLP" />
-        <div className="lg:w-1/4">
             <SidebarComponent />
-        </div>
-        <div className="lg:w-3/4 p-12">
-        <h2 className="text-lg font-semibold mb-4">Formulir Pendaftaran PLP</h2>
+        <div className="flex-1 p-6 lg:ml-64 mt-16">
+        <h2 className="text-xl font-semibold mb-4">Formulir Pendaftaran PLP</h2>
 
         {/* Menampilkan pesan status pendaftaran */}
         {statusPendaftaran && (
-            <Alert color="success" icon={HiExclamation} className="mb-6">
+            <Alert color="success" icon={HiCheckCircle} className="mb-6">
                 <span className="font-bold">Pendaftaran berhasil!</span> {statusPendaftaran.replace("Pendaftaran berhasil!", "").trim()}
             </Alert>
         )}
 
         {/* Menampilkan pesan error jika ada */}
         {errorMessage && (
-            <Alert color="failure" icon={HiCheckCircle} className="mb-6">
+            <Alert color="failure" icon={HiExclamation} className="mb-6">
                 <span className="font-medium">Pendaftaran gagal!</span> {errorMessage}
             </Alert>
         )}
 
                 <form onSubmit={handleSubmit}
-                      className="max-w-4xl mx-auto p-4 border rounded-lg shadow-lg bg-white"
+                      className="w-full max-w-6xl p-6 border rounded-lg shadow-lg bg-white"
                     >
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     {/* Render form fields */}
