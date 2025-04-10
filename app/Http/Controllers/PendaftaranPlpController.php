@@ -20,7 +20,13 @@ class PendaftaranPlpController extends Controller
         $smks = Smk::orderBy('name')->get(['id', 'name']);
         $keminatans = Keminatan::orderBy('name')->get(['id', 'name']);
         $pendaftaranPlp = PendaftaranPlp::where('user_id', Auth::id())->latest()->get();
-        return Inertia::render('PendaftaranPlp',
+
+        if (request()->wantsJson()) {
+            return response()->json($pendaftaranPlp, 201);
+        }
+
+        return Inertia::render(
+            'PendaftaranPlp',
             ['user' => $user, 'smks' => $smks, 'keminatans' => $keminatans, 'pendaftaranPlp' => $pendaftaranPlp]
         );
     }
@@ -28,6 +34,10 @@ class PendaftaranPlpController extends Controller
     public function indexAll()
     {
         $pendaftaranPlp = PendaftaranPlp::all();
+        if (request()->wantsJson()) {
+            return response()->json($pendaftaranPlp, 201);
+        }
+
         return Inertia::render('PendaftaranPlp');
     }
 
@@ -36,8 +46,7 @@ class PendaftaranPlpController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        {
+    { {
             $request->validate([
                 'keminatan_id' => 'required|exists:keminatans,id',
                 'nilai_plp_1' => 'required|in:A,B+,B,C+,C,D,E,Belum',
@@ -54,6 +63,13 @@ class PendaftaranPlpController extends Controller
                 'pilihan_smk_1' => $request->pilihan_smk_1,
                 'pilihan_smk_2' => $request->pilihan_smk_2,
             ]);
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'message' => 'Pendaftaran PLP berhasil dibuat',
+                    'pendaftaran_plp' => $pendaftaranPlp
+                ], 201);
+            }
 
             return redirect()->back()->with('success', 'Message');
         }
