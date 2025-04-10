@@ -67,7 +67,7 @@ export default function PendaftaranPlp() {
         setFormData((prevFormData) => ({
             ...prevFormData,
             namaLengkap: auth.user ? auth.user.name : '',
-            angkatan: auth.user ? auth.user.angkatan : '',
+            angkatan: JSON.parse(auth.user?.details).angkatan ? JSON.parse(auth.user?.details).angkatan : '',
         }));
     }, [auth]);
 
@@ -221,66 +221,66 @@ export default function PendaftaranPlp() {
 
     return (
         <div className="flex flex-col lg:flex-row">
-        <Head title="PendaftaranPLP" />
+            <Head title="PendaftaranPLP" />
             <SidebarComponent />
-        <div className="flex-1 p-6 lg:ml-64 mt-16">
-        <h2 className="text-xl font-semibold mb-4">Formulir Pendaftaran PLP</h2>
+            <div className="flex-1 p-6 lg:ml-64 mt-16">
+                <h2 className="text-xl font-semibold mb-4">Formulir Pendaftaran PLP</h2>
 
-        {/* Menampilkan pesan status pendaftaran */}
-        {statusPendaftaran && (
-            <Alert color="success" icon={HiCheckCircle} className="mb-6">
-                <span className="font-bold">Pendaftaran berhasil!</span> {statusPendaftaran.replace("Pendaftaran berhasil!", "").trim()}
-            </Alert>
-        )}
+                {/* Menampilkan pesan status pendaftaran */}
+                {statusPendaftaran && (
+                    <Alert color="success" icon={HiCheckCircle} className="mb-6">
+                        <span className="font-bold">Pendaftaran berhasil!</span> {statusPendaftaran.replace("Pendaftaran berhasil!", "").trim()}
+                    </Alert>
+                )}
 
-        {/* Menampilkan pesan error jika ada */}
-        {errorMessage && (
-            <Alert color="failure" icon={HiExclamation} className="mb-6">
-                <span className="font-medium">Pendaftaran gagal!</span> {errorMessage}
-            </Alert>
-        )}
+                {/* Menampilkan pesan error jika ada */}
+                {errorMessage && (
+                    <Alert color="failure" icon={HiExclamation} className="mb-6">
+                        <span className="font-medium">Pendaftaran gagal!</span> {errorMessage}
+                    </Alert>
+                )}
 
                 <form onSubmit={handleSubmit}
                       className="w-full max-w-6xl p-6 border rounded-lg shadow-lg bg-white"
-                    >
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    {/* Render form fields */}
-                    {formFields.map((field, index) => (
-                        <div className={`mb-4 ${field.name === 'bidangKeahlian' ? 'lg:col-span-2' : ''}`} key={index}>
-                             <Label htmlFor={field.name}>{field.label}</Label>
-                            {field.type === "select" ? (
-                                <Select
-                                    id={field.name}                                
-                                    name={field.name}
-                                    value={field.value}
-                                    onChange={handleChange}
-                                    disabled={sudahDaftar}
-                                    className="w-full"
-                                >
-                                    <option value="" disabled hidden>
-                                        {field.placeholder}
-                                    </option>
-                                    {field.options?.map((option, optionIndex) => (
-                                        <option key={optionIndex} value={option.value}>
-                                            {option.label}
+                >
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        {/* Render form fields */}
+                        {formFields.map((field, index) => (
+                            <div className={`mb-4 ${field.name === 'bidangKeahlian' ? 'lg:col-span-2' : ''}`} key={index}>
+                                <Label htmlFor={field.name}>{field.label}</Label>
+                                {field.type === "select" ? (
+                                    <Select
+                                        id={field.name}
+                                        name={field.name}
+                                        value={field.value}
+                                        onChange={handleChange}
+                                        disabled={sudahDaftar}
+                                        className="w-full"
+                                    >
+                                        <option value="" disabled hidden>
+                                            {field.placeholder}
                                         </option>
-                                    ))}
-                                </Select>
-                            ) : (
-                                <TextInput
-                                    id={field.name}                                
-                                    type={field.type}
-                                    name={field.name}
-                                    value={field.value}
-                                    onChange={handleChange}
-                                    className="w-full"
-                                    placeholder={field.placeholder}
-                                    disabled
-                                />
-                            )}
-                        </div>
-                    ))}
-            </div>
+                                        {field.options?.map((option, optionIndex) => (
+                                            <option key={optionIndex} value={option.value}>
+                                                {option.label}
+                                            </option>
+                                        ))}
+                                    </Select>
+                                ) : (
+                                    <TextInput
+                                        id={field.name}
+                                        type={field.type}
+                                        name={field.name}
+                                        value={field.value}
+                                        onChange={handleChange}
+                                        className="w-full"
+                                        placeholder={field.placeholder}
+                                        disabled
+                                    />
+                                )}
+                            </div>
+                        ))}
+                    </div>
                     <Button type="submit"
                             disabled={sudahDaftar}
                             className={`w-fit text-white px-5 py-2.5 ${sudahDaftar ? "cursor-not-allowed bg-neutral-500 " : "bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 "}`}>

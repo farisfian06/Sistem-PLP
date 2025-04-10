@@ -38,6 +38,11 @@ export default function Login({
                 </div>
             )}
 
+            <div className={"text-2xl my-4 font-extrabold dark:text-white"}>
+                Sistem Informasi PLP
+            </div>
+
+
             <form onSubmit={submit}>
                 <div>
                     <InputLabel htmlFor="email" value="Email" />
@@ -72,7 +77,7 @@ export default function Login({
                     <InputError message={errors.password} className="mt-2" />
                 </div>
 
-                <div className="mt-4 block">
+                <div className="mt-4 block  flex items-center justify-between">
                     <label className="flex items-center">
                         <Checkbox
                             name="remember"
@@ -84,25 +89,36 @@ export default function Login({
                                 )
                             }
                         />
-                        <span className="ms-2 text-sm text-gray-600">
+                        <span className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                             Remember me
                         </span>
-                    </label>
-                </div>
 
-                <div className="mt-4 flex items-center justify-end">
+                    </label>
                     {canResetPassword && (
                         <Link
                             href={route('password.request')}
                             className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                         >
-                            Forgot your password?
+                            Lupa password?
                         </Link>
                     )}
+                </div>
 
-                    <PrimaryButton className="ms-4" disabled={processing}>
+                <div className="mt-4 flex items-center justify-end">
+
+                    <PrimaryButton className="w-full mr-0" disabled={processing}>
                         Log in
                     </PrimaryButton>
+                </div>
+                <div className="flex justify-center items-center space-x-1 py-4">
+                    <span className="rounded-md text-sm text-gray-900">Belum punya akun? </span>
+
+                    <Link
+                        href={route('register')}
+                        className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    >
+                        Daftar
+                    </Link>
                 </div>
             </form>
         </GuestLayout>

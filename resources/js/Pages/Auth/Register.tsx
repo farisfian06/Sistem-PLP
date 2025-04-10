@@ -3,12 +3,19 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
+import {Head, Link, useForm} from '@inertiajs/react';
+import {FormEventHandler} from 'react';
 
 export default function Register() {
-    const { data, setData, post, processing, errors, reset } = useForm({
+
+    const defaultAngkatan = (new Date().getFullYear() - 3).toString();
+
+    const {data, setData, post, processing, errors, reset} = useForm({
         name: '',
+        details: {
+            nim: '',
+            angkatan: defaultAngkatan
+        },
         email: '',
         password: '',
         password_confirmation: '',
@@ -22,13 +29,14 @@ export default function Register() {
         });
     };
 
+
     return (
         <GuestLayout>
-            <Head title="Register" />
+            <Head title="Register"/>
 
             <form onSubmit={submit}>
                 <div>
-                    <InputLabel htmlFor="name" value="Name" />
+                    <InputLabel htmlFor="name" value="Name"/>
 
                     <TextInput
                         id="name"
@@ -41,11 +49,31 @@ export default function Register() {
                         required
                     />
 
-                    <InputError message={errors.name} className="mt-2" />
+                    <InputError message={errors.name} className="mt-2"/>
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="email" value="Email" />
+                    <InputLabel htmlFor="nim" value="NIM"/>
+
+                    <TextInput
+                        id="nim"
+                        name="nim"
+                        type="number"
+                        value={data.details.nim}
+                        className="mt-1 block w-full"
+                        autoComplete="name"
+                        onChange={(e) => setData('details', {
+                            ...data.details,
+                            nim: e.target.value
+                        })}
+                        required
+                    />
+
+                    <InputError message={errors.name} className="mt-2"/>
+                </div>
+
+                <div className="mt-4">
+                    <InputLabel htmlFor="email" value="Email"/>
 
                     <TextInput
                         id="email"
@@ -58,11 +86,30 @@ export default function Register() {
                         required
                     />
 
-                    <InputError message={errors.email} className="mt-2" />
+                    <InputError message={errors.email} className="mt-2"/>
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
+                    <InputLabel htmlFor="angkatan" value="Angkatan"/>
+
+                    <TextInput
+                        id="angkatan"
+                        type="number"
+                        name="angkatan"
+                        min={1999}
+                        max={2050}
+                        value={data.details.angkatan}
+                        className="mt-1 block w-full"
+                        onChange={(e) => setData('details', {
+                            ...data.details,
+                            angkatan: e.target.value
+                        })}
+                        required
+                    />
+                </div>
+
+                <div className="mt-4">
+                    <InputLabel htmlFor="password" value="Password"/>
 
                     <TextInput
                         id="password"
@@ -75,7 +122,7 @@ export default function Register() {
                         required
                     />
 
-                    <InputError message={errors.password} className="mt-2" />
+                    <InputError message={errors.password} className="mt-2"/>
                 </div>
 
                 <div className="mt-4">
@@ -103,17 +150,24 @@ export default function Register() {
                     />
                 </div>
 
-                <div className="mt-4 flex items-center justify-end">
+                <div className="mt-4">
+                    <PrimaryButton className="w-full mr-0" disabled={processing}>
+                        Daftar
+                    </PrimaryButton>
+                </div>
+
+
+                <div className="py-4 flex items-center justify-center">
+                    <span className="rounded-md text-sm mr-1 text-gray-600"
+                    >
+                        Sudah punya akun?
+                    </span>
                     <Link
                         href={route('login')}
                         className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
-                        Already registered?
+                        Login
                     </Link>
-
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Register
-                    </PrimaryButton>
                 </div>
             </form>
         </GuestLayout>
