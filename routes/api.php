@@ -24,6 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/all', [LogbookController::class, 'indexAll'])->middleware('role:Kaprodi');
         Route::get('/validasi', [LogbookController::class, 'indexByGuru'])->middleware('role:Guru,Dosen Pembimbing');
         Route::put('/validasi/{id}', [LogbookController::class, 'updateStatus'])->middleware('role:Guru,Dosen Pembimbing');
+        Route::delete('/delete/{id}', [LogbookController::class, 'destroy'])->middleware('role:Mahasiswa');
     });
 
     Route::prefix('smk')->group(function () {
