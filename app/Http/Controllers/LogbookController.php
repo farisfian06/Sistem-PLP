@@ -13,6 +13,11 @@ class LogbookController extends Controller
     public function index()
     {
         $logbooks = Logbook::where('user_id', Auth::id())->latest()->get();
+
+        if (request()->wantsJson()) {
+            return response()->json($logbooks, 201);
+        }
+
         return Inertia::render('Logbooks', [
             'logbooks' => $logbooks
         ]);
@@ -21,6 +26,11 @@ class LogbookController extends Controller
     public function indexAll()
     {
         $logbooks = Logbook::latest()->get();
+
+        if (request()->wantsJson()) {
+            return response()->json($logbooks, 201);
+        }
+
         return Inertia::render('Logbooks', [
             'logbooks' => $logbooks
         ]);
@@ -49,6 +59,10 @@ class LogbookController extends Controller
             ];
         });
 
+        if (request()->wantsJson()) {
+            return response()->json($logbooks, 201);
+        }
+
         return response()->json($logbooks);
     }
 
@@ -74,8 +88,11 @@ class LogbookController extends Controller
             'dokumentasi' => $request->dokumentasi,
         ]);
 
-        return redirect()->route('logbooks.index')->with('success', 'Logbook berhasil ditambahkan!');
+        if ($request->wantsJson()) {
+            return response()->json(['message' => 'Logbook berhasil dibuat', 'logbook' => $logbook], 201);
+        }
 
+        return redirect()->route('logbooks.index')->with('success', 'Logbook berhasil ditambahkan!');
     }
 
     /**
@@ -84,7 +101,7 @@ class LogbookController extends Controller
     public function show($id)
     {
         $logbook = Logbook::where('user_id', Auth::id())->findOrFail($id);
-        return response()->json($logbook);
+        return response()->json($logbook, 200);
     }
 
     /**
@@ -104,8 +121,11 @@ class LogbookController extends Controller
 
         $logbook->update($request->all());
 
-        return redirect()->route('logbooks.index')->with('success', 'Logbook berhasil diperbarui!');
+        if ($request->wantsJson()) {
+            return response()->json(['message' => 'Logbook berhasil diperbarui', 'logbook' => $logbook], 201);
+        }
 
+        return redirect()->route('logbooks.index')->with('success', 'Logbook berhasil diperbarui!');
     }
 
     /**
@@ -122,6 +142,10 @@ class LogbookController extends Controller
         $logbook->status = $request->status;
         $logbook->save();
 
+        if ($request->wantsJson()) {
+            return response()->json(['message' => 'Logbook status updated successfully', 'logbook' => $logbook], 201);
+        }
+
         return response()->json([
             'message' => 'Logbook status updated successfully',
             'logbook' => $logbook,
@@ -136,7 +160,10 @@ class LogbookController extends Controller
         $logbook = Logbook::where('user_id', Auth::id())->findOrFail($id);
         $logbook->delete();
 
-        return redirect()->route('logbooks.index')->with('success', 'Logbook berhasil dihapus!');
+        if (request()->wantsJson()) {
+            return response()->json(['message' => 'Logbook berhasil dihapus'], 201);
+        }
 
+        return redirect()->route('logbooks.index')->with('success', 'Logbook berhasil dihapus!');
     }
 }
