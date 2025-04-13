@@ -58,4 +58,20 @@ Route::get('/validasi-logbook', function () {
     return Inertia::render('ValidasiLogbook');
 })->name('validasi-logbook');;
 
+Route::get('/input-akun-pamong', function () {
+    return Inertia::render('Input/InputAkunPamong');
+})->name('input-akun-pamong');;
+
+Route::get('/input-akun-dosen', function () {
+    return Inertia::render('Input/InputAkunDosen');
+})->name('input-akun-dosen');;
+
+Route::get('/input-smk', function () {
+    return Inertia::render('Input/InputSmk');
+})->name('input-smk');;
+
+Route::get('/input-keminatan', function () {
+    return Inertia::render('Input/InputKeminatan');
+})->name('input-keminatan');;
+
 require __DIR__.'/auth.php';
