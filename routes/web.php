@@ -74,4 +74,8 @@ Route::get('/input-keminatan', function () {
     return Inertia::render('Input/InputKeminatan');
 })->name('input-keminatan');;
 
+Route::get('/pembagian-plp', function () {
+    return Inertia::render('PembagianPlp');
+})->name('pembagian-plp');;
+
 require __DIR__.'/auth.php';
