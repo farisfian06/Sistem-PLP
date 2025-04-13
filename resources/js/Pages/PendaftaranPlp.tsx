@@ -241,7 +241,7 @@ export default function PendaftaranPlp() {
                 )}
 
                 <form onSubmit={handleSubmit}
-                      className="w-full max-w-6xl p-6 border rounded-lg shadow-lg bg-white"
+                      className="w-full mx-auto p-6 border rounded-lg shadow-lg bg-white"
                 >
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         {/* Render form fields */}
