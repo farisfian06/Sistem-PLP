@@ -27,7 +27,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('smk')->group(function () {
-        Route::get('/', [SmkController::class, 'index'])->middleware('role:Kaprodi,Dosen Koordinator,Akademik');
+        Route::get('/', [SmkController::class, 'index'])->middleware('role:Kaprodi,Dosen Koordinator,Akademik,Mahasiswa');
         Route::post('/', [SmkController::class, 'store'])->middleware('role:Kaprodi,Dosen Koordinator,Akademik');
     });
 
