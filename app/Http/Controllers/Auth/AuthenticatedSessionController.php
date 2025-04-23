@@ -32,19 +32,20 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
-        
+
         $user = User::where("email", $request->email)->firstOrFail();
 
         if ($request->expectsJson()) {
-        $token = $user->createToken("auth_token")->plainTextToken;
-        return response()->json([
-            'id' => $user->id,
-            'email' => $user->email,
-            'user_token' => $token,
-            'token_type' => 'Bearer',
-            'status' => 'loggedin',
-            'verified' => true
-        ], 200);
+            $token = $user->createToken("auth_token")->plainTextToken;
+            return response()->json([
+                'id' => $user->id,
+                'email' => $user->email,
+                'user_token' => $token,
+                'token_type' => 'Bearer',
+                'role' => $user->role,
+                'status' => 'loggedin',
+                'verified' => true
+            ], 200);
         }
 
         $request->session()->regenerate();
@@ -61,13 +62,13 @@ class AuthenticatedSessionController extends Controller
         if ($request->expectsJson() || $request->bearerToken()) {
             $user = $request->user();
             $user->currentAccessToken()->delete();
-            
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Logout success'
             ]);
         }
-        
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
