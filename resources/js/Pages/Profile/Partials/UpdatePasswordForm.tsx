@@ -2,6 +2,7 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
+import { Button, Card } from "flowbite-react";
 import { Transition } from '@headlessui/react';
 import { useForm } from '@inertiajs/react';
 import { FormEventHandler, useRef } from 'react';
@@ -49,15 +50,14 @@ export default function UpdatePasswordForm({
     };
 
     return (
-        <section className={className}>
+        <Card className={`rounded-2xl ` + className}>
             <header>
                 <h2 className="text-lg font-medium text-gray-900">
-                    Update Password
+                    Perbarui Password
                 </h2>
 
                 <p className="mt-1 text-sm text-gray-600">
-                    Ensure your account is using a long, random password to stay
-                    secure.
+                    Untuk memastikan keamanan akun anda, gunakan password yang panjang dan sulit ditebak
                 </p>
             </header>
 
@@ -126,7 +126,7 @@ export default function UpdatePasswordForm({
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>Save</PrimaryButton>
+                    <PrimaryButton disabled={processing}>Perbarui Password</PrimaryButton>
 
                     <Transition
                         show={recentlySuccessful}
@@ -141,6 +141,6 @@ export default function UpdatePasswordForm({
                     </Transition>
                 </div>
             </form>
-        </section>
+        </Card>
     );
 }

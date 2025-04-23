@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -29,13 +30,48 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|lowercase|email|max:255',
+            'details' => 'array|nullable'
+        ]);
+
+        // Update the user data
+        $user->name = $validated['name'];
+        $user->email = $validated['email'];
+
+        // Handle the JSON details field
+
+        $details = $user->details ? json_decode($user->details, true) : [];
+        if($details != null) {
+
+            if (isset($validated['details']['nim'])) {
+                $details['nim'] = $validated['details']['nim'];
+            }
+
+            if (isset($validated['details']['angkatan'])) {
+                $details['angkatan'] = $validated['details']['angkatan'];
+            }
+
+            if (isset($validated['details']['phone'])) {
+                $details['phone'] = $validated['details']['phone'];
+            }
+
+            if (isset($validated['details']['nip'])) {
+                $details['nip'] = $validated['details']['nip'];
+            }
+
+            $user->details = json_encode($details);
         }
 
-        $request->user()->save();
+        // Save only if email was changed to avoid unnecessary updates
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
 
         return Redirect::route('profile.edit');
     }

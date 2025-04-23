@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Keminatan;
 use App\Models\PendaftaranPlp;
+use App\Models\Smk;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,14 +18,32 @@ class PendaftaranPlpController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
+        $smks = Smk::orderBy('name')->get(['id', 'name']);
+        $keminatans = Keminatan::orderBy('name')->get(['id', 'name']);
         $pendaftaranPlp = PendaftaranPlp::where('user_id', Auth::id())->latest()->get();
-        return response()->json($pendaftaranPlp);
+
+        if (request()->wantsJson()) {
+            return response()->json($pendaftaranPlp, 201);
+        }
+
+        return Inertia::render(
+            'PendaftaranPlp',
+            ['user' => $user, 'smks' => $smks, 'keminatans' => $keminatans, 'pendaftaranPlp' => $pendaftaranPlp]
+        );
     }
 
     public function indexAll()
     {
-        $pendaftaranPlp = PendaftaranPlp::all();
-        return response()->json($pendaftaranPlp);
+        $pendaftaranPlp = PendaftaranPlp::with(['user', 'pilihanSmk1', 'pilihanSmk2', 'keminatan'])->latest()->get();
+        $smk = Smk::orderBy('name')->orderBy('name', 'asc')->get(['id', 'name']);
+        $dospem = User::where('role', 'Dosen Pembimbing')->orderBy('name', 'asc')->get();
+
+        if (request()->wantsJson()) {
+            return response()->json($pendaftaranPlp, 201);
+        }
+
+        return Inertia::render('PembagianPlp', ['pendaftaranPlp' => $pendaftaranPlp, 'smk' => $smk, 'dospem' => $dospem]);
     }
 
 
@@ -28,8 +51,7 @@ class PendaftaranPlpController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        {
+    { {
             $request->validate([
                 'keminatan_id' => 'required|exists:keminatans,id',
                 'nilai_plp_1' => 'required|in:A,B+,B,C+,C,D,E,Belum',
@@ -47,10 +69,14 @@ class PendaftaranPlpController extends Controller
                 'pilihan_smk_2' => $request->pilihan_smk_2,
             ]);
 
-            return response()->json([
-                'message' => 'Pendaftaran PLP berhasil dibuat',
-                'pendaftaran_plp' => $pendaftaranPlp
-            ], 201);
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'message' => 'Pendaftaran PLP berhasil dibuat',
+                    'pendaftaran_plp' => $pendaftaranPlp
+                ], 201);
+            }
+
+            return redirect()->back()->with('success', 'Message');
         }
     }
 
@@ -93,6 +119,40 @@ class PendaftaranPlpController extends Controller
             'pendaftaran' => $pendaftaran
         ]);
     }
+
+    public function assignBatch(Request $request)
+    {
+        $validated = $request->validate([
+            'pendaftarans' => 'required|array',
+            'pendaftarans.*.id' => 'required|exists:pendaftaran_plps,id',
+            'pendaftarans.*.penempatan' => 'nullable|exists:smks,id',
+            'pendaftarans.*.dosen_pembimbing' => 'nullable|exists:users,id',
+        ]);
+
+        $updated = [];
+
+        DB::transaction(function () use ($validated, &$updated) {
+            foreach ($validated['pendaftarans'] as $data) {
+                $pendaftaran = PendaftaranPlp::find($data['id']);
+                if ($pendaftaran) {
+
+                    // menghandle empty string menjadi null saat di update
+                    $penempatan = $data['penempatan'] !== '' ? $data['penempatan'] : null;
+                    $dosenPembimbing = $data['dosen_pembimbing'] !== '' ? $data['dosen_pembimbing'] : null;
+
+                    $pendaftaran->update([
+                        'penempatan' => $penempatan,
+                        'dosen_pembimbing' => $dosenPembimbing,
+                    ]);
+
+                    $updated[] = $pendaftaran;
+                }
+            }
+        });
+
+        return back()->with('success', 'Data pada database telah berhasil diperbarui.');
+    }
+
 
 
     /**
