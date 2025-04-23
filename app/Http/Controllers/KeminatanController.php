@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Keminatan;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class KeminatanController extends Controller
 {
@@ -13,7 +14,13 @@ class KeminatanController extends Controller
     public function index()
     {
         $keminatans = Keminatan::all();
-        return response()->json($keminatans);
+        if (request()->wantsJson()) {
+            return response()->json($keminatans, 200);
+        }
+
+        return Inertia::render('Input/InputKeminatan', [
+            'keminatans' => $keminatans
+        ]);
     }
 
     /**
@@ -27,10 +34,15 @@ class KeminatanController extends Controller
 
         $keminatan = Keminatan::create($validatedData);
 
-        return response()->json([
-            'message' => 'Keminatan berhasil dibuat',
-            'keminatan' => $keminatan
-        ], 201);
+        if ($request->wantsJson()) {
+            return response()->json([
+                'message' => 'Keminatan berhasil dibuat',
+                'keminatan' => $keminatan
+            ], 201);
+        }
+
+        return back()->with('success', 'Data keminatan baru telah berhasil dimasukkan');
+
     }
 
     /**
@@ -55,10 +67,15 @@ class KeminatanController extends Controller
 
         $keminatan->update($validatedData);
 
-        return response()->json([
-            'message' => 'Keminatan berhasil diperbarui',
-            'keminatan' => $keminatan
-        ]);
+        if ($request->wantsJson()) {
+            return response()->json([
+                'message' => 'Keminatan berhasil diperbarui',
+                'keminatan' => $keminatan
+            ]);
+        }
+
+        return back()->with('success', 'Data keminatan telah berhasil diperbarui');
+
     }
 
     /**
@@ -69,6 +86,11 @@ class KeminatanController extends Controller
         $keminatan = Keminatan::findOrFail($id);
         $keminatan->delete();
 
-        return response()->json(['message' => 'Keminatan berhasil dihapus']);
+        if (request()->wantsJson()) {
+            return response()->json(['message' => 'Keminatan berhasil dihapus']);
+        }
+
+        return back()->with('success', 'Data sekolah telah berhasil dihapus');
+
     }
 }

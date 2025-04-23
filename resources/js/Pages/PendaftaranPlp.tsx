@@ -3,6 +3,10 @@ import SidebarComponent from "@/Components/SidebarComponent";
 import {HiCheckCircle, HiExclamation} from "react-icons/hi";
 import { TextInput, Label, Select, Button, Alert } from "flowbite-react";
 import {Head, router, usePage} from "@inertiajs/react";
+import {PendaftaranProps} from "@/types/types";
+import AddUpdateAkunDosen from "@/Components/AddUpdateAkunDosen";
+import ConfirmationModal from "@/Components/ConfirmationModal";
+import PositiveConfirmationModal from "@/Components/PositiveConfirmationModal";
 
 // model props user yang diambil
 type User = {
@@ -11,34 +15,12 @@ type User = {
     angkatan: string;
 };
 
-// deklarasi props yang diterima dari backend
-declare module '@inertiajs/core' {
-    interface PageProps {
-        auth: {
-            user: User | null;
-        };
-        smks: {
-            id: number;
-            name: string;
-        }[];
-        keminatans: {
-            id: number;
-            name: string;
-        }[];
-        pendaftaranPlp: Array<{
-            keminatan_id: number;
-            nilai_plp_1: string;
-            nilai_micro_teaching: string;
-            pilihan_smk_1: number;
-            pilihan_smk_2: number;
-        }>;
-    }
-}
-
 export default function PendaftaranPlp() {
 
     //ambil prop untuk ditampilkan
-    const {auth, smks, keminatans, pendaftaranPlp} = usePage().props;
+    const {auth, smks, keminatans, pendaftaranPlp} = usePage<PendaftaranProps>().props;
+    const [openConfirmation, setOpenConfirmation] = useState(false);
+    const [processing, setProcessing] = useState(false);
 
     // State untuk form data
     const [formData, setFormData] = useState({
@@ -72,7 +54,7 @@ export default function PendaftaranPlp() {
     }, [auth]);
 
     // Handle form submission
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmitRequest = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         console.log("Data yang dikirim:", formData);
@@ -86,7 +68,12 @@ export default function PendaftaranPlp() {
 
         // Reset error message jika semua valid
         setErrorMessage(null);
+        setOpenConfirmation(true);
 
+    };
+
+    const handleSubmit = async () => {
+        setProcessing(true);
         // Mengirim formData ke backend
         try {
             // fetch data dengan inertia
@@ -98,10 +85,14 @@ export default function PendaftaranPlp() {
                 pilihan_smk_2: formData.pilihanSmk2,
             }, {
                 onSuccess: () => {
+                    setProcessing(false);
+                    setOpenConfirmation(false);
                     setSudahDaftar(true);
                     setErrorMessage(null);
                 },
                 onError: (errors) => {
+                    setProcessing(false);
+                    setOpenConfirmation(false);
                     setErrorMessage(errors.message || "Terjadi kesalahan saat mengirim data.");
                 },
             });
@@ -110,6 +101,10 @@ export default function PendaftaranPlp() {
             setErrorMessage("Terjadi kesalahan saat mengirim data. Silakan coba lagi.");
         }
     };
+
+
+
+
 
     // set message jika user sudah daftar
     useEffect(() => {
@@ -240,7 +235,7 @@ export default function PendaftaranPlp() {
                     </Alert>
                 )}
 
-                <form onSubmit={handleSubmit}
+                <form onSubmit={handleSubmitRequest}
                       className="w-full mx-auto p-6 border rounded-lg shadow-lg bg-white"
                 >
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -288,6 +283,18 @@ export default function PendaftaranPlp() {
                     </Button>
                 </form>
             </div>
+            <PositiveConfirmationModal
+                open={openConfirmation}
+                onClose={() => {
+                    setOpenConfirmation(false);
+                }}
+                title={"Apakah anda yakin ingin mendaftar PLP?"}
+                subtitle={"Setelah memilih yakin, data akan disimpan dan tidak dapat diubah"}
+                onSubmit={() => {
+                    handleSubmit()
+                }}
+                onProcess={processing}
+            />
         </div>
     );
 }

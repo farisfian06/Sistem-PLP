@@ -1,5 +1,13 @@
 import {Button, Card} from "flowbite-react";
 import {usePage} from "@inertiajs/react";
+import {NavItem} from "@/types/types";
+import {ElementType} from "react";
+
+type DashboardCardProps = {
+    icon?: ElementType | null;
+    pIcon?: ElementType | null;
+    [key: string]: any;
+};
 
 export default function DashboardCard(
     {
@@ -13,7 +21,7 @@ export default function DashboardCard(
         buttonHref = '',
         className = '',
         ...props
-    }
+    }: DashboardCardProps
 ) {
 
     return (

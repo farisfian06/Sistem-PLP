@@ -46,8 +46,23 @@ class ProfileController extends Controller
 
         $details = $user->details ? json_decode($user->details, true) : [];
         if($details != null) {
-            $details['nim'] = $validated['details']['nim'];
-            $details['angkatan'] = $validated['details']['angkatan'];
+
+            if (isset($validated['details']['nim'])) {
+                $details['nim'] = $validated['details']['nim'];
+            }
+
+            if (isset($validated['details']['angkatan'])) {
+                $details['angkatan'] = $validated['details']['angkatan'];
+            }
+
+            if (isset($validated['details']['phone'])) {
+                $details['phone'] = $validated['details']['phone'];
+            }
+
+            if (isset($validated['details']['nip'])) {
+                $details['nip'] = $validated['details']['nip'];
+            }
+
             $user->details = json_encode($details);
         }
 

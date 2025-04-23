@@ -6,6 +6,7 @@ import { Transition } from '@headlessui/react';
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
 import { Button, Card } from "flowbite-react";
+import {Authentication} from "@/types/types";
 
 export default function UpdateProfileInformation({
     mustVerifyEmail,
@@ -17,7 +18,8 @@ export default function UpdateProfileInformation({
     className?: string;
 }) {
     // mengambil data user
-    const user = usePage().props.auth.user;
+    const { auth } = usePage().props as unknown as Authentication;
+    const user = auth.user;
 
     // mengisi data awal form
     const { data, setData, patch, errors, processing, recentlySuccessful } =
@@ -86,6 +88,47 @@ export default function UpdateProfileInformation({
 
                     <InputError className="mt-2" message={errors.name}/>
                 </div>}
+
+                {/*menampilkan input NIP jika role bukan mahasiswa*/}
+                {user?.role !== "Mahasiswa" && <div>
+                    <InputLabel htmlFor="nip" value="NIP"/>
+
+                    <TextInput
+                        id="nip"
+                        name="nip"
+                        type="number"
+                        value={data.details.nip}
+                        className="mt-1 block w-full"
+                        autoComplete="name"
+                        onChange={(e) => setData('details', {
+                            ...data.details,
+                            nip: e.target.value
+                        })}
+                        required
+                    />
+
+                    <InputError className="mt-2" message={errors.name}/>
+                </div>}
+
+                <div>
+                    <InputLabel htmlFor="phone" value="Nomor Telepon"/>
+
+                    <TextInput
+                        id="phone"
+                        name="phone"
+                        type="number"
+                        value={data.details.phone}
+                        className="mt-1 block w-full"
+                        autoComplete="name"
+                        onChange={(e) => setData('details', {
+                            ...data.details,
+                            phone: e.target.value
+                        })}
+                        required
+                    />
+
+                    <InputError className="mt-2" message={errors.name}/>
+                </div>
 
                 {/*input email*/}
                 <div>

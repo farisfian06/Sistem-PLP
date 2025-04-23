@@ -1,10 +1,13 @@
 import {Card} from "flowbite-react";
 import {FaUserCircle} from "react-icons/fa";
 import {usePage} from "@inertiajs/react";
+import {Authentication} from "@/types/types";
 
 export default function ProfileCard() {
 
-    const user = usePage().props.auth.user;
+    // const user = usePage().props.auth.user;
+    const { auth } = usePage().props as unknown as Authentication;
+    const user = auth.user;
 
     return (
         <Card className={`rounded-2xl`}>

@@ -1,33 +1,24 @@
-import { useState } from "react";
-import { HiChartPie,HiDocumentAdd, HiBookOpen, HiCubeTransparent, HiUser} from "react-icons/hi";
+import {useState} from "react";
+import {
+    HiChartPie,
+    HiDocumentAdd,
+    HiBookOpen,
+    HiCubeTransparent,
+    HiUser,
+    HiUsers,
+    HiDatabase,
+    HiTable
+} from "react-icons/hi";
+import {FaUserCircle} from "react-icons/fa";
 import {Link, router, usePage} from "@inertiajs/react";
+import {Authentication, NavItem} from "@/types/types";
+import SidebarCollapse from "@/Components/SidebarCollapse";
 
-interface NavItem {
-    href: string;
-    label: string;
-    icon: JSX.Element;
-}
-
-// model props yang diambil
-type User = {
-    id: number;
-    name: string;
-    angkatan: string;
-};
-
-// memastikan user authorization untuk props
-declare module '@inertiajs/core' {
-    interface PageProps {
-        auth: {
-            user: User | null;
-        };
-    }
-}
 
 const SidebarComponent: React.FC = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
-    const {auth} = usePage().props;
+    const {auth} = usePage<Authentication>().props;
 
     // Handle logout
     const handleLogout = (): void => {
@@ -39,14 +30,36 @@ const SidebarComponent: React.FC = () => {
 
     if (auth.user?.role === "Mahasiswa") {
         navItems = [
-            { href: route('dashboard'), label: "Dashboard", icon: <HiChartPie className="w-5 h-5" /> },
-            { href: route('pendaftaran-plp.store'), label: "Pendaftaran Plp", icon: <HiDocumentAdd className="w-5 h-5" /> },
-            { href: route('logbooks.index'), label: "Logbook", icon: <HiBookOpen className="w-5 h-5" /> },
+            {href: route('dashboard'), label: "Dashboard", icon: <HiChartPie className="w-5 h-5"/>},
+            {
+                href: route('pendaftaran-plp.store'),
+                label: "Pendaftaran Plp",
+                icon: <HiDocumentAdd className="w-5 h-5"/>
+            },
+            {href: route('logbooks.index'), label: "Logbook", icon: <HiBookOpen className="w-5 h-5"/>},
         ];
     } else if (auth.user?.role === "Guru" || auth.user?.role === "Dosen Pembimbing") {
         navItems = [
-            { href: route('dashboard'), label: "Dashboard", icon: <HiChartPie className="w-5 h-5" /> },
-            { href: route('validasi-logbook'), label: "Validasi Logbook", icon: <HiBookOpen className="w-5 h-5" /> },
+            {href: route('dashboard'), label: "Dashboard", icon: <HiChartPie className="w-5 h-5"/>},
+            {href: route('logbooks.validasi'), label: "Validasi Logbook", icon: <HiBookOpen className="w-5 h-5"/>},
+        ];
+    } else if (auth.user?.role === "Kaprodi" || auth.user?.role === "Dosen Koordinator" || auth.user?.role === "Akademik") {
+        navItems = [
+            {href: route('dashboard'), label: "Dashboard", icon: <HiChartPie className="w-5 h-5"/>},
+            {href: route('pembagian-plp'), label: "Pembagian PLP", icon: <HiTable className="w-5 h-5"/>},
+            {
+                icon: <HiUsers className="w-5 h-5"/>, label: "Kelola Akun", collapse: [
+                    {href: route('input-akun-pamong'), label: "Akun Guru"},
+                    {href: route('input-akun-dosen'), label: "Akun Dosen"},
+                ]
+            },
+            {
+                icon: <HiDatabase className="w-5 h-5"/>, label: "Kelola Data", collapse: [
+                    {href: route('input-smk'), label: "Data SMK"},
+                    {href: route('input-keminatan'), label: "Data Keminatan"},
+                ]
+            },
+
         ];
     }
 
@@ -54,7 +67,8 @@ const SidebarComponent: React.FC = () => {
     return (
         <>
             {/* Top Navbar */}
-            <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+            <nav
+                className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
                 <div className="px-3 py-3 lg:px-5 lg:pl-3 flex items-center justify-between">
                     <div className="flex items-center">
                         {/* Toggle Sidebar Button */}
@@ -72,8 +86,8 @@ const SidebarComponent: React.FC = () => {
                             </svg>
                         </button>
                         <span className="flex items-center ms-2 text-xl font-semibold text-gray-900 dark:text-white">
-              <HiCubeTransparent className="mr-2 text-indigo-500" />
-              Sistem Informasi PLP
+                            <Link href={"/dashboard"}>Sistem Informasi PLP</Link>
+
             </span>
                     </div>
 
@@ -81,21 +95,24 @@ const SidebarComponent: React.FC = () => {
                     <div className="relative ml-auto">
                         <button
                             onClick={() => setDropdownOpen(!dropdownOpen)}
-                            className="flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full focus:ring-2 focus:ring-gray-300 dark:bg-white dark:focus:ring-gray-600"
+                            className="flex items-center justify-center w-8 h-8 bg-white rounded-full focus:ring-2 focus:ring-gray-300 dark:bg-white dark:focus:ring-gray-600"
                         >
                             <span className="sr-only">Open user menu</span>
-                            <HiUser className="w-6 h-6 text-gray-700 dark:text-gray-900" />
+                            <FaUserCircle className="w-8 h-8 text-gray-400 dark:text-gray-900"/>
                         </button>
                         {dropdownOpen && (
-                            <div className="absolute right-0 z-50 mt-2 w-48 bg-white rounded-md shadow-lg dark:bg-gray-700">
-                                    <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-                                        {auth.user?.name}
-                                        {/*<div className="text-xs text-gray-500 dark:text-gray-300">{auth.user?.angkatan}</div>*/}
-                                        <div className="text-xs text-gray-500 dark:text-gray-300">{auth.user?.details ? JSON.parse(auth.user?.details).nim : auth.user?.role }</div>
-                                    </div>
+                            <div
+                                className="absolute right-0 z-50 mt-2 w-48 bg-white rounded-md shadow-lg dark:bg-gray-700">
+                                <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                                    {auth.user?.name}
+                                    {/*<div className="text-xs text-gray-500 dark:text-gray-300">{auth.user?.angkatan}</div>*/}
+                                    <div
+                                        className="text-xs text-gray-500 dark:text-gray-300">{auth.user?.role === "Mahasiswa" ? JSON.parse(auth.user?.details).nim : auth.user?.role}</div>
+                                </div>
                                 <ul>
                                     <li>
-                                        <Link href={route('profile.edit')} className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white">Profil</Link>
+                                        <Link href={route('profile.edit')}
+                                              className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white">Profil</Link>
                                     </li>
                                     <li>
                                         <button
@@ -123,15 +140,20 @@ const SidebarComponent: React.FC = () => {
                 <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
                     <ul className="space-y-2">
                         {navItems.map((item, index) => (
-                            <li key={index}>
-                                <Link
-                                    href={item.href}
-                                    className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                                >
-                                    {item.icon}
-                                    <span className="ml-3">{item.label}</span>
-                                </Link>
-                            </li>
+                            item.collapse ? <SidebarCollapse key={index}
+                                                             icon={item.icon}
+                                                             items={item.collapse}
+                                                             label={item.label}
+                                /> :
+                                <li key={index}>
+                                    <Link
+                                        href={item.href || ""}
+                                        className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                                    >
+                                        {item.icon}
+                                        <span className="ml-3">{item.label}</span>
+                                    </Link>
+                                </li>
                         ))}
                     </ul>
                 </div>

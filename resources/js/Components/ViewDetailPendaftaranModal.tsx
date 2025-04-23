@@ -13,13 +13,17 @@ const ViewDetailPendaftaranModal: React.FC<ViewDetailPendaftaranModalProps> = ({
 }) => {
   if (!data) return null;
 
+  console.log(data)
+
   const detailItems = [
-    { label: "Nama", value: data.nama },
-    { label: "Keminatan", value: data.pendaftaranPlp.keminatan },
-    { label: "Nilai PLP 1", value: data.pendaftaranPlp.nilai_plp_1 },
-    { label: "Nilai Micro Teaching", value: data.pendaftaranPlp.nilai_micro_teaching },
-    { label: "Pilihan SMK 1", value: data.pendaftaranPlp.pilihan_smk_1 },
-    { label: "Pilihan SMK 2", value: data.pendaftaranPlp.pilihan_smk_2 },
+    { label: "Nama", value: data.user.name },
+    { label: "NIM", value: JSON.parse(data.user.details).nim },
+    { label: "Angkatan", value: JSON.parse(data.user.details).angkatan },
+    { label: "Keminatan", value: data.keminatan.name },
+    { label: "Nilai PLP 1", value: data.nilai_plp_1 },
+    { label: "Nilai Micro Teaching", value: data.nilai_micro_teaching },
+    { label: "Pilihan SMK 1", value: data.pilihan_smk1.name },
+    { label: "Pilihan SMK 2", value: data.pilihan_smk2.name },
   ];
 
   return (

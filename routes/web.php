@@ -1,13 +1,17 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KeminatanController;
 use App\Http\Controllers\LogbookController;
 use App\Http\Controllers\PendaftaranPlpController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SmkController;
+use App\Http\Controllers\ValidasiLogbookController;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 // Redirect ke login/dashboard saat buka website
 Route::get('/', function () {
@@ -17,65 +21,72 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard/Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::prefix('/logbooks')->group(function () {
+        Route::middleware('role:Mahasiswa')->group(function () {
+            Route::get('/', [LogbookController::class, 'index'])->name('logbooks.index');
+            Route::post('/', [LogbookController::class, 'store'])->name('logbooks.store');
+            Route::put('/{id}', [LogbookController::class, 'update'])->name('logbooks.update');
+            Route::delete('/{id}', [LogbookController::class, 'destroy']);
+        });
+        Route::middleware('role:Guru,Dosen Pembimbing')->group(function () {
+            Route::get('/validasi', [LogbookController::class, 'indexByGuru'])->name('logbooks.validasi');
+            Route::put('/validasi/{id}', [LogbookController::class, 'updateStatus']);
+            Route::patch('/validasi', [LogbookController::class, 'updateMultipleStatus']);
+        });
+        Route::middleware('role:Kaprodi,Dosen Koordinator,Akademik')->group(function () {
+            Route::get('/all', [LogbookController::class, 'indexAll']);
+        });
+    });
+
+    Route::prefix('/profile')->group(function () {
+        Route::get('/', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    });
+
+    Route::prefix('/akun')->group(function () {
+        Route::middleware('role:Kaprodi,Dosen Koordinator,Akademik')->group(function () {
+            Route::get('/dosen', [RegisteredUserController::class, 'indexDospem'])->name('input-akun-dosen');
+            Route::get('/pamong', [RegisteredUserController::class, 'indexPamong'])->name('input-akun-pamong');
+            Route::post('/', [RegisteredUserController::class, 'pembuatanAkun'])->name('pembuatan-akun');
+            Route::patch('/{id}', [RegisteredUserController::class, 'updateAkun'])->name('update-akun');
+            Route::delete('/{id}', [RegisteredUserController::class, 'deleteAkun'])->name('hapus-akun');
+        });
+    });
+
+    Route::prefix('/smk')->group(function () {
+        Route::get('/', [SmkController::class, 'index'])->name('input-smk');
+        Route::middleware('role:Kaprodi,Dosen Koordinator,Akademik')->group(function () {
+            Route::post('/', [SmkController::class, 'store'])->name('post-smk');
+            Route::patch('/{id}', [SmkController::class, 'update'])->name('patch-smk');
+            Route::delete('/{id}', [SmkController::class, 'destroy'])->name('delete-smk');
+        });
+    });
+
+    Route::prefix('/keminatan')->group(function () {
+        Route::get('/', [KeminatanController::class, 'index'])->name('input-keminatan');
+        Route::middleware('role:Kaprodi,Dosen Koordinator,Akademik')->group(function () {
+            Route::post('/', [KeminatanController::class, 'store'])->name('post-keminatan');
+            Route::patch('/{id}', [KeminatanController::class, 'update'])->name('patch-keminatan');
+            Route::delete('/{id}', [KeminatanController::class, 'destroy'])->name('delete-keminatan');
+        });
+    });
+
+    Route::prefix('/pendaftaran-plp')->group(function () {
+        Route::middleware('role:Mahasiswa')->group(function () {
+            Route::get('/', [PendaftaranPlpController::class, 'index'])->name('pendaftaran-plp.index');
+            Route::post('/', [PendaftaranPlpController::class, 'store'])->name('pendaftaran-plp.store');
+        });
+        Route::middleware('role:Kaprodi,Dosen Koordinator,Akademik')->group(function () {
+            Route::get('/pembagian', [PendaftaranPlpController::class, 'indexAll'])->name('pembagian-plp');
+            Route::patch('/{id}', [PendaftaranPlpController::class, 'assign'])->name('pembagian-plp.assign');
+            Route::patch('/', [PendaftaranPlpController::class, 'assignBatch'])->name('pembagian-plp.assign-batch');
+        });
+    });
+
 });
-
-// Menampilkan halaman daftar PLP (untuk user yang sudah login)
-Route::get('/pendaftaran-plp', [PendaftaranPlpController::class, 'index'])->name('pendaftaran-plp.index');
-
-// Menyimpan data pendaftaran PLP
-Route::post('/pendaftaran-plp', [PendaftaranPlpController::class, 'store'])->name('pendaftaran-plp.store');
-
-// Menampilkan halaman daftar logbook untuk user yang sudah login
-Route::get('/logbooks', [LogbookController::class, 'index'])->name('logbooks.index');
-
-// Menyimpan data logbook baru
-Route::post('/logbooks', [LogbookController::class, 'store'])->name('logbooks.store')->middleware('auth');
-
-// Menampilkan halaman tambah logbook
-Route::get('/logbook/tambah', function () {
-    return Inertia::render('TambahLogbook');
-})->name('logbook.store');
-
-// Memperbarui logbook
-Route::put('/logbooks/{id}', [LogbookController::class, 'update'])->name('logbooks.update')->middleware('auth');
-
-// Menghapus logbook
-Route::delete('/logbooks/{id}', [LogbookController::class, 'destroy'])->name('logbooks.destroy')->middleware('auth');
-Route::get('/logbooks/{id}', [LogbookController::class, 'show'])->name('logbooks.show');
-
-// Route::get('/admin', [LogbookController::class, 'index'])->middleware('role:Mahasiswa')->name('admin');
-// Route::post('/logbooks', [LogbookController::class, 'store'])->middleware('auth')->name('logbooks.store');
-
-Route::get('/validasi-logbook', function () {
-    return Inertia::render('ValidasiLogbook');
-})->name('validasi-logbook');;
-
-Route::get('/input-akun-pamong', function () {
-    return Inertia::render('Input/InputAkunPamong');
-})->name('input-akun-pamong');;
-
-Route::get('/input-akun-dosen', function () {
-    return Inertia::render('Input/InputAkunDosen');
-})->name('input-akun-dosen');;
-
-Route::get('/input-smk', function () {
-    return Inertia::render('Input/InputSmk');
-})->name('input-smk');;
-
-Route::get('/input-keminatan', function () {
-    return Inertia::render('Input/InputKeminatan');
-})->name('input-keminatan');;
-
-Route::get('/pembagian-plp', function () {
-    return Inertia::render('PembagianPlp');
-})->name('pembagian-plp');;
 
 require __DIR__.'/auth.php';

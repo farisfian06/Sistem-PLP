@@ -3,10 +3,13 @@ import { FaRegFileExcel } from "react-icons/fa6";
 import {Head, usePage} from '@inertiajs/react';
 import DashboardMahasiswa from "@/Pages/Dashboard/Role/DashboardMahasiswa";
 import DashboardDosenGuru from "@/Pages/Dashboard/Role/DashboardDosenGuru";
+import DashboardAkademik from "@/Pages/Dashboard/Role/DashboardAkademik";
+import {Authentication} from "@/types/types";
 
 const Dashboard: React.FC = () => {
 
-    const user = usePage().props.auth.user;
+    const {props} = usePage();
+    const user = usePage<Authentication>().props.auth.user;
 
     return (
         <div className="flex flex-col lg:flex-row">
@@ -27,6 +30,10 @@ const Dashboard: React.FC = () => {
                     } else if (user.role === "Dosen Pembimbing" || user.role === "Guru") {
                         return (
                             <DashboardDosenGuru/>
+                        )
+                    } else if (user.role === "Kaprodi" || user.role === "Dosen Koordinator" || user.role === "Akademik") {
+                        return (
+                            <DashboardAkademik/>
                         )
                     }
                 })()}
