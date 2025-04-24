@@ -58,8 +58,8 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('/smk')->group(function () {
-        Route::get('/', [SmkController::class, 'index'])->name('input-smk');
         Route::middleware('role:Kaprodi,Dosen Koordinator,Akademik')->group(function () {
+            Route::get('/', [SmkController::class, 'index'])->name('input-smk');
             Route::post('/', [SmkController::class, 'store'])->name('post-smk');
             Route::patch('/{id}', [SmkController::class, 'update'])->name('patch-smk');
             Route::delete('/{id}', [SmkController::class, 'destroy'])->name('delete-smk');
@@ -67,8 +67,8 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('/keminatan')->group(function () {
-        Route::get('/', [KeminatanController::class, 'index'])->name('input-keminatan');
         Route::middleware('role:Kaprodi,Dosen Koordinator,Akademik')->group(function () {
+            Route::get('/', [KeminatanController::class, 'index'])->name('input-keminatan');
             Route::post('/', [KeminatanController::class, 'store'])->name('post-keminatan');
             Route::patch('/{id}', [KeminatanController::class, 'update'])->name('patch-keminatan');
             Route::delete('/{id}', [KeminatanController::class, 'destroy'])->name('delete-keminatan');

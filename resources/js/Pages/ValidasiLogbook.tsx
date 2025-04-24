@@ -12,7 +12,7 @@ import {
 } from "flowbite-react";
 import React, {useEffect, useRef, useState} from "react";
 import SidebarComponent from "@/Components/SidebarComponent";
-import {Head, router, usePage, useForm} from "@inertiajs/react";
+import {Head, router, usePage, useForm, Link} from "@inertiajs/react";
 import {FlashProps, Logbook} from "@/types/types";
 
 
@@ -193,6 +193,7 @@ const ValidasiLogbook = () => {
                                     <TableHeadCell>Tanggal Kegiatan</TableHeadCell>
                                     <TableHeadCell>Waktu Mulai</TableHeadCell>
                                     <TableHeadCell>Waktu Selesai</TableHeadCell>
+                                    <TableHeadCell>Dokumentasi</TableHeadCell>
                                     <TableHeadCell>Status</TableHeadCell>
                                 </TableRow>
                             </TableHead>
@@ -210,6 +211,7 @@ const ValidasiLogbook = () => {
                                             <TableCell>{item.tanggal}</TableCell>
                                             <TableCell>{item.mulai}</TableCell>
                                             <TableCell>{item.selesai}</TableCell>
+                                            <TableCell><a href={item.dokumentasi} target="_blank" className="text-blue-500 underline">Lihat</a></TableCell>
                                             <TableCell><Badge color={
                                                 item.status === "approved" ? "success" :
                                                     item.status === "rejected" ? "failure" :
