@@ -102,7 +102,6 @@ export interface AssignPendaftaran {
     nama: string;
     nipNik: string;
     noHp: string;
-    role: string;
     pangkatGolongan: string;
     noRekening: string;
     anRekening: string;
@@ -112,6 +111,20 @@ export interface AssignPendaftaran {
     password: string;
   }
 
+  export interface AkunPJ {
+    id: number;
+    nama: string;
+    nipNik: string;
+    noHp: string;
+    role: string;
+    pangkatGolongan: string;
+    noRekening: string;
+    anRekening: string;
+    namaBank: string;
+    sekolah: string;
+    email: string;
+    password: string;
+  }
   export interface AkunDosen {
     id: number;
     nama: string;

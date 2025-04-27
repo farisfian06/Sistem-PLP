@@ -49,7 +49,8 @@ const SidebarComponent: React.FC = () => {
             {href: route('pembagian-plp'), label: "Pembagian PLP", icon: <HiTable className="w-5 h-5"/>},
             {
                 icon: <HiUsers className="w-5 h-5"/>, label: "Kelola Akun", collapse: [
-                    {href: route('input-akun-pamong'), label: "Akun Guru"},
+                    {href: route('input-akun-pamong'), label: "Akun Guru Pamong"},
+                    {href: route('input-akun-pj'), label: "Akun PJ Sekolah"},
                     {href: route('input-akun-dosen'), label: "Akun Dosen"},
                 ]
             },

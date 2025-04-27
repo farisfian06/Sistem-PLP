@@ -1,25 +1,26 @@
 import { Button, Label, Modal, ModalBody, ModalHeader, TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { AkunPamong } from "@/types/types"
+import { AkunPJ } from "@/types/types"
 
-interface AddUpdateAkunPamongProps {
+interface AddUpdateAkunPJProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (akun: AkunPamong) => void;
-  akunToEdit: AkunPamong | null;
+  onSubmit: (akun: AkunPJ) => void;
+  akunToEdit: AkunPJ | null;
 }
 
-const AddUpdateAkunPamong: React.FC<AddUpdateAkunPamongProps> = ({
+const AddUpdateAkunPJ: React.FC<AddUpdateAkunPJProps> = ({
   open,
   onClose,
   onSubmit,
   akunToEdit,
 }) => {
-  const [form, setForm] = useState<AkunPamong>({
+  const [form, setForm] = useState<AkunPJ>({
     id: akunToEdit?.id || Date.now(),
     nama: akunToEdit?.nama || "",
     nipNik: akunToEdit?.nipNik || "",
     noHp: akunToEdit?.noHp || "",
+    role: akunToEdit?.role || "",
     pangkatGolongan: akunToEdit?.pangkatGolongan || "",
     noRekening: akunToEdit?.noRekening || "",
     anRekening: akunToEdit?.anRekening || "",
@@ -38,6 +39,7 @@ const AddUpdateAkunPamong: React.FC<AddUpdateAkunPamongProps> = ({
         nama: "",
         nipNik: "",
         noHp: "",
+        role: "",
         pangkatGolongan: "",
         noRekening: "",
         anRekening: "",
@@ -65,7 +67,7 @@ const AddUpdateAkunPamong: React.FC<AddUpdateAkunPamongProps> = ({
       <ModalBody>
         <form onSubmit={handleSubmit} className="space-y-4">
           <h3 className="text-xl font-semibold text-gray-900">
-            {akunToEdit ? "Edit Akun Guru Pamong" : "Tambah Akun Guru Pamong"}
+            {akunToEdit ? "Edit Akun PJ" : "Tambah Akun PJ"}
           </h3>
           {[
             { name: "nama", label: "Nama" },
@@ -84,7 +86,7 @@ const AddUpdateAkunPamong: React.FC<AddUpdateAkunPamongProps> = ({
               <TextInput
                 id={name}
                 name={name}
-                value={form[name as keyof AkunPamong] || ""}
+                value={form[name as keyof AkunPJ] || ""}
                 onChange={handleChange}
                 required
               />
@@ -92,6 +94,23 @@ const AddUpdateAkunPamong: React.FC<AddUpdateAkunPamongProps> = ({
           ))}
 
           <div>
+            <Label htmlFor="role">Role</Label>
+            <select
+              id="role"
+              name="role"
+              value={form.role}
+              onChange={handleChange}
+              required
+              className="w-full rounded-lg border border-gray-300 p-2"
+            >
+              <option value="">-- Pilih Role --</option>
+              <option value="Kepala Sekolah / Penanggung Jawab">
+                Kepala Sekolah / Penanggung Jawab
+              </option>
+              <option value="Koordinator PLP dari SMK">
+                Koordinator PLP dari SMK
+              </option>
+            </select>
           </div>
 
           <div className="flex justify-end gap-2">
@@ -106,4 +125,4 @@ const AddUpdateAkunPamong: React.FC<AddUpdateAkunPamongProps> = ({
   );
 };
 
-export default AddUpdateAkunPamong;
+export default AddUpdateAkunPJ;

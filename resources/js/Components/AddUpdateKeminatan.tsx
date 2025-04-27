@@ -64,7 +64,7 @@ const AddUpdateKeminatan = ({open, onClose, onSubmit, akunToEdit, errorMessage, 
             </ModalHeader>
             <ModalBody>
                 <div className="space-y-4">
-                    {inputField("Nama", "name")}
+                    {inputField("Nama Keminatan", "name")}
                     <div className={`${!errorMessage ? 'hidden' : ''} text-red-500`}>
                         {errorMessage}
                     </div>

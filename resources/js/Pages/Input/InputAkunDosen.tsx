@@ -138,8 +138,8 @@ const InputAkunDosen = () => {
     }, [flash]);
 
     const columns = [
-        {label: "NIP", key: "nip", group: "details"},
         {label: "Nama", key: "name"},
+        {label: "NIP", key: "nip", group: "details"},
         {label: "No HP", key: "phone", group: "details"},
         {label: "Email", key: "email"},
     ];

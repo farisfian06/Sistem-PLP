@@ -65,7 +65,7 @@ const AddUpdateSmk = ({open, onClose, onSubmit, akunToEdit, errorMessage, onProc
             </ModalHeader>
             <ModalBody>
                 <div className="space-y-4">
-                    {inputField("Name", "name")}
+                    {inputField("Nama Sekolah", "name")}
                     <div className={`${!errorMessage ? 'hidden' : ''} text-red-500`}>
                         {errorMessage}
                     </div>

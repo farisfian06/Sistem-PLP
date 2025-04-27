@@ -86,7 +86,7 @@ Route::middleware('auth')->group(function () {
             Route::patch('/', [PendaftaranPlpController::class, 'assignBatch'])->name('pembagian-plp.assign-batch');
         });
     });
-
+    Route::get('/pj', [RegisteredUserController::class, 'indexPJ'])->name('input-akun-pj');
 });
 
 require __DIR__.'/auth.php';

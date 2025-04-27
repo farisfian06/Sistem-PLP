@@ -42,6 +42,15 @@ class RegisteredUserController extends Controller
         ]);
     }
 
+    public function indexPJ()
+    {
+        $users = User::where('role', 'Guru')->get();
+
+        return Inertia::render('Input/InputAkunPJ', [
+            'users' => $users
+        ]);
+    }
+
     /**
      * Handle an incoming registration request.
      *
