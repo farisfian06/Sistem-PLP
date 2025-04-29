@@ -20,4 +20,9 @@ class Logbook extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function logbookApprovers()
+    {
+        return $this->hasMany(LogbookApprover::class);
+    }
 }

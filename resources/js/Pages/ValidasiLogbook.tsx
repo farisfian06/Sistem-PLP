@@ -195,6 +195,7 @@ const ValidasiLogbook = () => {
                                     <TableHeadCell>Waktu Selesai</TableHeadCell>
                                     <TableHeadCell>Dokumentasi</TableHeadCell>
                                     <TableHeadCell>Status</TableHeadCell>
+                                    <TableHeadCell>Validasi anda</TableHeadCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody className="divide-y">
@@ -218,6 +219,12 @@ const ValidasiLogbook = () => {
                                                         "gray"
                                             }
                                                               className="w-fit">{item.status.charAt(0).toUpperCase() + item.status.slice(1)}</Badge></TableCell>
+                                            <TableCell><Badge color={
+                                                item.your_approval_status === "approved" ? "success" :
+                                                    item.your_approval_status === "rejected" ? "failure" :
+                                                        "gray"
+                                            }
+                                                              className="w-fit">{item.your_approval_status.charAt(0).toUpperCase() + item.your_approval_status.slice(1)}</Badge></TableCell>
                                         </TableRow>
                                     ))
                                 ) : (
