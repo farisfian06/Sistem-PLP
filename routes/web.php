@@ -34,7 +34,7 @@ Route::middleware('auth')->group(function () {
         Route::middleware('role:Guru,Dosen Pembimbing')->group(function () {
             Route::get('/validasi', [LogbookController::class, 'indexByGuru'])->name('logbooks.validasi');
             Route::put('/validasi/{id}', [LogbookController::class, 'updateStatus']);
-            Route::patch('/validasi', [LogbookController::class, 'updateMultipleStatus']);
+            Route::patch('/validasi', [LogbookController::class, 'updateMultipleApproverStatus']);
         });
         Route::middleware('role:Kaprodi,Dosen Koordinator,Akademik')->group(function () {
             Route::get('/all', [LogbookController::class, 'indexAll']);
@@ -86,7 +86,6 @@ Route::middleware('auth')->group(function () {
             Route::patch('/', [PendaftaranPlpController::class, 'assignBatch'])->name('pembagian-plp.assign-batch');
         });
     });
-
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
