@@ -72,4 +72,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(User::class, 'guru_id');
     }
+
+    public function dosenPembimbing()
+    {
+        return $this->hasMany(User::class, 'dosen_id');
+    }
+
+    public function logbooksToApprove()
+    {
+        return $this->belongsToMany(Logbook::class, 'logbook_approvers', 'approver_id', 'logbook_id')
+            ->withPivot('status')
+            ->withTimestamps();
+    }
 }
