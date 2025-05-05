@@ -17,6 +17,14 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->midd
 
 Route::middleware('auth:sanctum')->group(function () {
 
+    Route::prefix('/akun')->group(function () {
+        Route::get('/dospem', [RegisteredUserController::class, 'indexDospem']);
+        Route::get('/pamong', [RegisteredUserController::class, 'indexPamong']);
+        Route::get('/kaprodi', [RegisteredUserController::class, 'indexKaprodi']);
+        Route::get('/koordinator', [RegisteredUserController::class, 'indexKoordinator']);
+        Route::get('/pj', [RegisteredUserController::class, 'indexPJ']);
+    });
+
     Route::post('/pembuatan-akun', [RegisteredUserController::class, 'pembuatanAkun'])->middleware('role:Akademik');
 
     Route::prefix('/logbooks')->group(function () {
