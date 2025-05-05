@@ -25,6 +25,7 @@ class User extends Authenticatable
         'role',
         'details',
         'guru_id',
+        'dosen_id',
     ];
 
     /**
