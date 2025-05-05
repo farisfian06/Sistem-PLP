@@ -6,6 +6,7 @@ use App\Http\Controllers\KeminatanController;
 use App\Http\Controllers\LogbookController;
 use App\Http\Controllers\SmkController;
 use App\Http\Controllers\PendaftaranPlpController;
+use App\Http\Controllers\ValidasiLogbookController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,7 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [LogbookController::class, 'store'])->middleware('role:Mahasiswa');
         Route::get('/all', [LogbookController::class, 'indexAll'])->middleware('role:Kaprodi');
         Route::get('/validasi', [LogbookController::class, 'indexByGuru'])->middleware('role:Guru,Dosen Pembimbing');
-        Route::put('/validasi/{id}', [LogbookController::class, 'updateStatus'])->middleware('role:Guru,Dosen Pembimbing');
+        Route::put('/validasi/{id}', [ValidasiLogbookController::class, 'updateSingleApproverStatus'])->middleware('role:Guru,Dosen Pembimbing');
         Route::delete('/delete/{id}', [LogbookController::class, 'destroy'])->middleware('role:Mahasiswa');
     });
 
