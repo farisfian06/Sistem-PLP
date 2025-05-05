@@ -63,11 +63,4 @@ class PendaftaranPlp extends Model
         return $this->belongsTo(Smk::class, 'penempatan');
     }
 
-    /**
-     * Relationship with User (Supervisor)
-     */
-    public function dosenPembimbing()
-    {
-        return $this->belongsTo(User::class, 'dosen_pembimbing');
-    }
 }

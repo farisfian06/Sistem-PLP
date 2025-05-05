@@ -17,13 +17,15 @@ class DashboardController extends Controller
 
         if ($user->role == "Mahasiswa") {
 
-            $pendaftaranPlp = PendaftaranPlp::with(['penempatanSmk', 'dosenPembimbing'])->where('user_id', $user->id)->get();
+            $pendaftaranPlp = PendaftaranPlp::with('penempatanSmk')->where('user_id', $user->id)->get();
             $guru = User::where('id', $user->guru_id)->value('name');
+            $dospem = User::where('id', $user->dosen_id)->value('name');
             $logbookDisetujui = Logbook::where('user_id', $user->id)->where('status', 'approved')->count();
 
             return Inertia::render('Dashboard/Dashboard', [
                 'pendaftaranPlp' => $pendaftaranPlp,
                 'guru' => $guru,
+                'dospem' => $dospem,
                 'logbookDisetujui' => $logbookDisetujui,
             ]);
 
@@ -33,8 +35,8 @@ class DashboardController extends Controller
                 $mahasiswaIds = User::where('guru_id', $user->id)->pluck('id');
                 $mahasiswaDibimbing = User::where('guru_id', $user->id)->count();
             } else {
-                $mahasiswaIds = PendaftaranPlp::where('dosen_pembimbing', $user->id)->pluck('user_id');
-                $mahasiswaDibimbing = PendaftaranPlp::where('dosen_pembimbing', $user->id)->count();
+                $mahasiswaIds = User::where('dosen_id', $user->id)->pluck('id');
+                $mahasiswaDibimbing = User::where('dosen_id', $user->id)->count();
             }
 
             $logbookDisetujui = Logbook::whereIn('user_id', $mahasiswaIds)->where('status', 'approved')->count();

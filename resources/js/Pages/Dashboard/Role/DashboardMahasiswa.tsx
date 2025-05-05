@@ -11,6 +11,7 @@ const DashboardMahasiswa: React.FC = () => {
             auth: { user: any },
             pendaftaranPlp: any[],
             guru: string,
+            dospem: string,
             logbookDisetujui: number,
         }
     };
@@ -18,6 +19,7 @@ const DashboardMahasiswa: React.FC = () => {
 
     const pendaftaranPlp = props.pendaftaranPlp.length > 0 ? props.pendaftaranPlp[0] : null;
     const guru = props.guru;
+    const dospem = props.dospem;
     const logbookDisetujui = props.logbookDisetujui;
 
     console.log("pendaftaranPlp");
@@ -51,7 +53,7 @@ const DashboardMahasiswa: React.FC = () => {
                 <div className="flex gap-3 w-full gap-6 flex-col xl:flex-row">
                     <DashboardCard
                         title={"Dosen Pembimbing"}
-                        content={pendaftaranPlp?.dosen_pembimbing?.name || "-"}
+                        content={dospem || "-"}
                         className={"flex-1 w-full"}
                         pIcon={FaUserFriends}
                     />

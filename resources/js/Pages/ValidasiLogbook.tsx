@@ -229,7 +229,7 @@ const ValidasiLogbook = () => {
                                     ))
                                 ) : (
                                     <TableRow>
-                                        <TableCell colSpan={6} className="text-center">
+                                        <TableCell colSpan={9} className="text-center">
                                             Belum ada logbook
                                         </TableCell>
                                     </TableRow>

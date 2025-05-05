@@ -163,6 +163,7 @@ class PendaftaranPlpController extends Controller
             'pendaftarans.*.id' => 'required|exists:pendaftaran_plps,id',
             'pendaftarans.*.penempatan' => 'nullable|exists:smks,id',
             'pendaftarans.*.dosen_pembimbing' => 'nullable|exists:users,id',
+            'pendaftarans.*.guru_pamong' => 'nullable|exists:users,id',
         ]);
 
         $updated = [];
@@ -171,14 +172,20 @@ class PendaftaranPlpController extends Controller
             foreach ($validated['pendaftarans'] as $data) {
                 $pendaftaran = PendaftaranPlp::find($data['id']);
                 if ($pendaftaran) {
+                    $mahasiswa = $pendaftaran->user;
 
                     // menghandle empty string menjadi null saat di update
-                    $penempatan = $data['penempatan'] !== '' ? $data['penempatan'] : null;
-                    $dosenPembimbing = $data['dosen_pembimbing'] !== '' ? $data['dosen_pembimbing'] : null;
+                    $penempatan = ($data['penempatan'] ?? '') !== '' ? $data['penempatan'] : null;
+                    $dosenPembimbing = ($data['dosen_pembimbing'] ?? '') !== '' ? $data['dosen_pembimbing'] : null;
+                    $guruPamong = ($data['guru_pamong'] ?? '') !== '' ? $data['guru_pamong'] : null;
 
                     $pendaftaran->update([
                         'penempatan' => $penempatan,
-                        'dosen_pembimbing' => $dosenPembimbing,
+                    ]);
+
+                    $mahasiswa->update([
+                        'dosen_id' => $dosenPembimbing,
+                        'guru_id' => $guruPamong,
                     ]);
 
                     $updated[] = $pendaftaran;

@@ -18,15 +18,17 @@ const PembagianPlp = () => {
     const {props} = usePage();
     const {flash} = usePage<FlashProps>().props;
 
-    const pendaftaranPlpData = Array.isArray(props.pendaftaranPlp) ? props.pendaftaranPlp : [];
+    const pendaftaranPlp = Array.isArray(props.pendaftaranPlp) ? props.pendaftaranPlp : [];
     const dospemData = Array.isArray(props.dospem) ? props.dospem : [];
+    const guruData = Array.isArray(props.guru) ? props.guru : [];
     const smkData = Array.isArray(props.smk) ? props.smk : [];
+
     const {data, setData, post, put, processing, reset, patch} = useForm<Pendaftaran>({
         pendaftarans: []
     });
 
     const [dataChanged, setDataChanged] = useState(false);
-    const [pendaftaranPlp, setPendaftaranPlp] = useState(pendaftaranPlpData);
+    // const [pendaftaranPlp, setPendaftaranPlp] = useState(pendaftaranPlpData);
     const [viewData, setViewData] = useState<any | null>(null);
     const [changedIds, setChangedIds] = useState<number[]>([]);
     const [feedback, setFeedback] = useState({
@@ -35,10 +37,6 @@ const PembagianPlp = () => {
         message: "",
     })
 
-    const handleDelete = (id: number) => {
-        setPendaftaranPlp(pendaftaranPlp.filter((m) => m.id !== id));
-        setChangedIds(changedIds.filter((selectedId) => selectedId !== id));
-    };
 
     const handleView = (data: any) => {
         setViewData(data);
@@ -74,7 +72,8 @@ const PembagianPlp = () => {
         const newPendaftaran = selectedMahasiswa.map(pendaftaran => ({
             id: pendaftaran.id,
             penempatan: pendaftaran.penempatan,
-            dosen_pembimbing: pendaftaran.dosen_pembimbing
+            dosen_pembimbing: pendaftaran.dosen_pembimbing,
+            guru_pamong: pendaftaran.guru_pamong,
         }));
 
         setData('pendaftarans', newPendaftaran);
@@ -82,6 +81,7 @@ const PembagianPlp = () => {
 
     useEffect(() => {
         if (data.pendaftarans.length !== 0) {
+            console.log(data);
             patch(`/pendaftaran-plp`, {
                 preserveScroll: true,
                 onSuccess: () => {
@@ -173,6 +173,7 @@ const PembagianPlp = () => {
                                 <TableHeadCell>Waktu Pendaftaran</TableHeadCell>
                                 <TableHeadCell>Pilihan SMK</TableHeadCell>
                                 <TableHeadCell>Dosen Pembimbing</TableHeadCell>
+                                <TableHeadCell>Guru Pamong</TableHeadCell>
                                 <TableHeadCell className="text-center">Aksi</TableHeadCell>
                             </TableRow>
                         </TableHead>
@@ -200,8 +201,12 @@ const PembagianPlp = () => {
                                             mhs.penempatan = parseInt(value);
                                             handleDataChange(mhs.id);
                                         })}</TableCell>
-                                        <TableCell>{renderSelect(mhs.dosen_pembimbing, dospemData, (value) => {
+                                        <TableCell>{renderSelect(mhs.user.dosen_id, dospemData, (value) => {
                                             mhs.dosen_pembimbing = parseInt(value);
+                                            handleDataChange(mhs.id);
+                                        })}</TableCell>
+                                        <TableCell>{renderSelect(mhs.user.guru_id, guruData, (value) => {
+                                            mhs.guru_pamong = parseInt(value);
                                             handleDataChange(mhs.id);
                                         })}</TableCell>
                                         <TableCell className="flex justify-center gap-2">
