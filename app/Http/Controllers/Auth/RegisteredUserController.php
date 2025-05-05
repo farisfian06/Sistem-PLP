@@ -41,6 +41,16 @@ class RegisteredUserController extends Controller
                 ];
             });
 
+        if (request()->wantsJson()) {
+            return response()->json(
+                [
+                    'users' => $users,
+                ],
+                200
+            );
+        }
+
+
         return Inertia::render('Input/InputAkunDosen', [
             'users' => $users
         ]);
@@ -61,6 +71,15 @@ class RegisteredUserController extends Controller
                     'temporary_password' => $user->temporaryPassword->password ?? null,
                 ];
             });
+
+        if (request()->wantsJson()) {
+            return response()->json(
+                [
+                    'users' => $users,
+                ],
+                200
+            );
+        }
 
         return Inertia::render('Input/InputAkunPamong', [
             'users' => $users
@@ -83,6 +102,15 @@ class RegisteredUserController extends Controller
                 ];
             });
 
+        if (request()->wantsJson()) {
+            return response()->json(
+                [
+                    'users' => $users,
+                ],
+                200
+            );
+        }
+
         return Inertia::render('Input/InputAkunKaprodi', [
             'users' => $users
         ]);
@@ -103,6 +131,15 @@ class RegisteredUserController extends Controller
                     'temporary_password' => $user->temporaryPassword->password ?? null,
                 ];
             });
+
+        if (request()->wantsJson()) {
+            return response()->json(
+                [
+                    'users' => $users,
+                ],
+                200
+            );
+        }
 
         return Inertia::render('Input/InputAkunKoordinator', [
             'users' => $users
@@ -125,6 +162,15 @@ class RegisteredUserController extends Controller
                 ];
             });
 
+        if (request()->wantsJson()) {
+            return response()->json(
+                [
+                    'users' => $users,
+                ],
+                200
+            );
+        }
+
         return Inertia::render('Input/InputAkunAkademik', [
             'users' => $users
         ]);
@@ -133,6 +179,15 @@ class RegisteredUserController extends Controller
     public function indexPJ()
     {
         $users = User::where('role', 'Guru')->get();
+
+        if (request()->wantsJson()) {
+            return response()->json(
+                [
+                    'users' => $users,
+                ],
+                200
+            );
+        }
 
         return Inertia::render('Input/InputAkunPJ', [
             'users' => $users
@@ -195,7 +250,7 @@ class RegisteredUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
             'password' => 'required',
-            'role' => 'required|in:Kaprodi,Dosen Koordinator,Dosen Pembimbing,Akademik,Mahasiswa,Observer,Guru',
+            'role' => 'required|in:Kaprodi,Dosen Koordinator,Dosen Pembimbing,Akademik,Mahasiswa,Observer,Guru,Admin',
             'details' => 'nullable|array'
         ]);
 
@@ -230,7 +285,7 @@ class RegisteredUserController extends Controller
             ], 201);
         }
 
-//        return back()->with('user', $user);
+        //        return back()->with('user', $user);
         return back()->with('success', 'Akun baru telah berhasil dibuat');
     }
 
@@ -291,5 +346,4 @@ class RegisteredUserController extends Controller
 
         return back()->with('success', 'Akun telah berhasil dihapus');
     }
-
 }
