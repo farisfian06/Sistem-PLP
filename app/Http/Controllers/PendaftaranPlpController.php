@@ -122,19 +122,39 @@ class PendaftaranPlpController extends Controller
 
         // Validate the request data
         $validatedData = $request->validate([
-            'penempatan' => 'exists:smks,id',
-            'dosen_pembimbing' => 'exists:users,id',
+            'penempatan' => 'nullable|exists:smks,id',
+            'dosen_pembimbing' => 'required|exists:users,id',
+            'guru_pamong' => 'required|exists:users,id',
         ]);
 
-        // Update the Pendaftaran PLP record
-        $pendaftaran->update($validatedData);
+        // Update penempatan pada Pendaftaran PLP
+        $pendaftaran->update([
+            'penempatan' => $validatedData['penempatan'],
+        ]);
+
+        // Ambil user (mahasiswa) terkait pendaftaran ini
+        $mahasiswa = $pendaftaran->user;
+
+        // Update dosen_id dan guru_id mahasiswa (kalau memang keduanya ingin diisi dengan dosen_pembimbing)
+        $mahasiswa->update([
+            'dosen_id' => $validatedData['dosen_pembimbing'],
+            'guru_id' => $validatedData['guru_pamong'], // Jika memang dosen pembimbing dianggap sebagai guru juga
+        ]);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'message' => 'Berhasil menambahkan penempatan dan dosen pembimbing',
+            ], 201);
+        }
 
         // Return a JSON response
         return response()->json([
             'message' => 'Berhasil menambahkan penempatan dan dosen pembimbing',
-            'pendaftaran' => $pendaftaran
+            'pendaftaran' => $pendaftaran,
+            'mahasiswa' => $mahasiswa,
         ]);
     }
+
 
     public function assignBatch(Request $request)
     {
