@@ -1,128 +1,141 @@
-import { Button, Label, Modal, ModalBody, ModalHeader, TextInput } from "flowbite-react";
-import { useEffect, useState } from "react";
-import { AkunPJ } from "@/types/types"
+import {Button, Label, Modal, ModalBody, ModalHeader, TextInput} from "flowbite-react";
+import {useEffect, useState} from "react";
+import {AkunPJ} from "@/types/types"
 
 interface AddUpdateAkunPJProps {
-  open: boolean;
-  onClose: () => void;
-  onSubmit: (akun: AkunPJ) => void;
-  akunToEdit: AkunPJ | null;
+    open: boolean;
+    onClose: () => void;
+    onSubmit: (akun: AkunPJ) => void;
+    akunToEdit: AkunPJ | null;
+    smk: number;
+    onProcess: boolean;
 }
 
 const AddUpdateAkunPJ: React.FC<AddUpdateAkunPJProps> = ({
-  open,
-  onClose,
-  onSubmit,
-  akunToEdit,
-}) => {
-  const [form, setForm] = useState<AkunPJ>({
-    id: akunToEdit?.id || Date.now(),
-    nama: akunToEdit?.nama || "",
-    nipNik: akunToEdit?.nipNik || "",
-    noHp: akunToEdit?.noHp || "",
-    role: akunToEdit?.role || "",
-    pangkatGolongan: akunToEdit?.pangkatGolongan || "",
-    noRekening: akunToEdit?.noRekening || "",
-    anRekening: akunToEdit?.anRekening || "",
-    namaBank: akunToEdit?.namaBank || "",
-    sekolah: akunToEdit?.sekolah || "",
-    email: akunToEdit?.email || "",
-    password: akunToEdit?.password || "",
-  });
+                                                             open,
+                                                             onClose,
+                                                             onSubmit,
+                                                             akunToEdit,
+                                                             smk,
+                                                             onProcess
+                                                         }) => {
+    const [form, setForm] = useState<AkunPJ>({
+        id: akunToEdit?.id || 0,
+        nama: akunToEdit?.nama || "",
+        nip: akunToEdit?.nip || "",
+        notel: akunToEdit?.notel || "",
+        status: akunToEdit?.status || "",
+        pangkat: akunToEdit?.pangkat || "",
+        norek: akunToEdit?.norek || "",
+        norek_an: akunToEdit?.norek_an || "",
+        nama_bank: akunToEdit?.nama_bank || "",
+        smk_id: smk,
+    });
 
-  useEffect(() => {
-    if (akunToEdit) {
-      setForm(akunToEdit);
-    } else {
-      setForm({
-        id: Date.now(),
-        nama: "",
-        nipNik: "",
-        noHp: "",
-        role: "",
-        pangkatGolongan: "",
-        noRekening: "",
-        anRekening: "",
-        namaBank: "",
-        sekolah: "",
-        email: "",
-        password: "",
-      });
+    useEffect(() => {
+        if (akunToEdit) {
+            setForm(akunToEdit);
+        } else {
+            emptyForm();
+        }
+    }, [akunToEdit]);
+
+
+    const emptyForm = () => {
+        setForm({
+            id: Date.now(),
+            nama: "",
+            nip: "",
+            notel: "",
+            status: "",
+            pangkat: "",
+            norek: "",
+            norek_an: "",
+            nama_bank: "",
+            smk_id: smk,
+        });
     }
-  }, [akunToEdit]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        setForm({...form, [e.target.name]: e.target.value});
+    };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit(form);
-    onClose();
-  };
+    useEffect(() => {
+        if (!open) emptyForm();
+    }, [open]);
 
-  return (
-    <Modal show={open} size="lg" onClose={onClose} popup>
-      <ModalHeader />
-      <ModalBody>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <h3 className="text-xl font-semibold text-gray-900">
-            {akunToEdit ? "Edit Akun PJ" : "Tambah Akun PJ"}
-          </h3>
-          {[
-            { name: "nama", label: "Nama" },
-            { name: "nipNik", label: "NIP/NIK" },
-            { name: "noHp", label: "No HP" },
-            { name: "pangkatGolongan", label: "Pangkat/Golongan" },
-            { name: "noRekening", label: "No Rekening" },
-            { name: "anRekening", label: "A.N Rekening" },
-            { name: "namaBank", label: "Nama Bank" },
-            { name: "sekolah", label: "Sekolah" },
-            {name: "email", label: "Email"},
-            {name: "password", label:"Password"}
-          ].map(({ name, label }) => (
-            <div key={name}>
-              <Label htmlFor={name}>{label}</Label>
-              <TextInput
-                id={name}
-                name={name}
-                value={form[name as keyof AkunPJ] || ""}
-                onChange={handleChange}
-                required
-              />
-            </div>
-          ))}
+    useEffect(() => {
+        setForm({...form, smk_id: smk});
+    }, [smk]);
 
-          <div>
-            <Label htmlFor="role">Role</Label>
-            <select
-              id="role"
-              name="role"
-              value={form.role}
-              onChange={handleChange}
-              required
-              className="w-full rounded-lg border border-gray-300 p-2"
-            >
-              <option value="">-- Pilih Role --</option>
-              <option value="Kepala Sekolah / Penanggung Jawab">
-                Kepala Sekolah / Penanggung Jawab
-              </option>
-              <option value="Koordinator PLP dari SMK">
-                Koordinator PLP dari SMK
-              </option>
-            </select>
-          </div>
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        onSubmit(form);
+    };
 
-          <div className="flex justify-end gap-2">
-            <Button color="gray" onClick={onClose}>
-              Batal
-            </Button>
-            <Button type="submit">Simpan</Button>
-          </div>
-        </form>
-      </ModalBody>
-    </Modal>
-  );
+    return (
+        <Modal show={open} size="lg" onClose={onClose} popup>
+            <ModalHeader/>
+            <ModalBody>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <h3 className="text-xl font-semibold text-gray-900">
+                        {akunToEdit ? "Edit Akun PJ" : "Tambah Akun PJ"}
+                    </h3>
+                    {[
+                        {name: "nama", label: "Nama"},
+                        {name: "nip", label: "NIP/NIK"},
+                        {name: "notel", label: "No HP"},
+                        {name: "pangkat", label: "Pangkat Golongan"},
+                        {name: "norek", label: "No Rekening"},
+                        {name: "norek_an", label: "An Rekening"},
+                        {name: "nama_bank", label: "Nama Bank"},
+                    ].map(({name, label}) => (
+                        <div key={name}>
+                            <Label htmlFor={name}>{label}</Label>
+                            <TextInput
+                                id={name}
+                                name={name}
+                                value={form[name as keyof AkunPJ] || ""}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                    ))}
+
+                    <div>
+                        <Label htmlFor="status">Status</Label>
+                        <select
+                            id="status"
+                            name="status"
+                            value={form.status}
+                            onChange={handleChange}
+                            required
+                            className="w-full rounded-lg border border-gray-300 p-2"
+                        >
+                            <option value="">-- Pilih Status --</option>
+                            <option value="Kepala Sekolah / Penanggung Jawab">
+                                Kepala Sekolah / Penanggung Jawab
+                            </option>
+                            <option value="Koordinator PLP dari SMK">
+                                Koordinator PLP dari SMK
+                            </option>
+                        </select>
+                    </div>
+
+                    <div className="flex justify-end gap-2">
+                        <Button color="gray" onClick={onClose}>
+                            Batal
+                        </Button>
+                        <Button onClick={handleSubmit}
+                                disabled={onProcess}>{onProcess ? "Menyimpan..." : "Simpan"}</Button>
+                        {/*<Button type="button" onClick={() => {*/}
+                        {/*    console.log(smk)*/}
+                        {/*}}>DEBUG</Button>*/}
+                    </div>
+                </form>
+            </ModalBody>
+        </Modal>
+    );
 };
 
 export default AddUpdateAkunPJ;

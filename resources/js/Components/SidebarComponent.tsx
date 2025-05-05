@@ -50,7 +50,27 @@ const SidebarComponent: React.FC = () => {
             {
                 icon: <HiUsers className="w-5 h-5"/>, label: "Kelola Akun", collapse: [
                     {href: route('input-akun-pamong'), label: "Akun Guru Pamong"},
-                    {href: route('input-akun-pj'), label: "Akun PJ Sekolah"},
+                    {href: route('input-akun-dosen'), label: "Akun Dosen"},
+                ]
+            },
+            {
+                icon: <HiDatabase className="w-5 h-5"/>, label: "Kelola Data", collapse: [
+                    {href: route('input-smk'), label: "Data SMK"},
+                    {href: route('input-keminatan'), label: "Data Keminatan"},
+                ]
+            },
+
+        ];
+    } else if (auth.user?.role === "Admin") {
+        navItems = [
+            {href: route('dashboard'), label: "Dashboard", icon: <HiChartPie className="w-5 h-5"/>},
+            {href: route('pembagian-plp'), label: "Pembagian PLP", icon: <HiTable className="w-5 h-5"/>},
+            {
+                icon: <HiUsers className="w-5 h-5"/>, label: "Kelola Akun", collapse: [
+                    {href: route('input-akun-kaprodi'), label: "Akun Kaprodi"},
+                    {href: route('input-akun-koordinator'), label: "Akun Dosen Koordinator"},
+                    {href: route('input-akun-akademik'), label: "Akun Akademik"},
+                    {href: route('input-akun-pamong'), label: "Akun Guru Pamong"},
                     {href: route('input-akun-dosen'), label: "Akun Dosen"},
                 ]
             },

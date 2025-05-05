@@ -87,6 +87,7 @@ export interface FlashProps {
     flash: {
         success?: string;
         error?: string;
+        componentSuccess?: string;
     };
 }
 
@@ -111,20 +112,18 @@ export interface AssignPendaftaran {
     password: string;
   }
 
-  export interface AkunPJ {
+export interface AkunPJ {
     id: number;
     nama: string;
-    nipNik: string;
-    noHp: string;
-    role: string;
-    pangkatGolongan: string;
-    noRekening: string;
-    anRekening: string;
-    namaBank: string;
-    sekolah: string;
-    email: string;
-    password: string;
-  }
+    nip: string;
+    notel: string;
+    status: string;
+    pangkat: string;
+    norek: string;
+    norek_an: string;
+    nama_bank: string;
+    smk_id: number;
+}
   export interface AkunDosen {
     id: number;
     nama: string;

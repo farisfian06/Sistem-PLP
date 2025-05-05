@@ -12,13 +12,13 @@ interface Props {
     onProcess: boolean;
 }
 
-const AddUpdateAkunPamong = ({open, onClose, onSubmit, akunToEdit, errorMessage, onProcess}: Props) => {
+const AddUpdateAkunAkademik = ({open, onClose, onSubmit, akunToEdit, errorMessage, onProcess}: Props) => {
     const [formData, setFormData] = useState<Record<string, any>>({
         id: 0,
         name: "",
         details: "",
         email: "",
-        role: "Guru",
+        role: "Akademik",
         password: "",
         password_confirmation: "",
     });
@@ -29,7 +29,7 @@ const AddUpdateAkunPamong = ({open, onClose, onSubmit, akunToEdit, errorMessage,
             name: "",
             details: "",
             email: "",
-            role: "Guru",
+            role: "Akademik",
             password: "",
             password_confirmation: "",
         });
@@ -89,7 +89,7 @@ const AddUpdateAkunPamong = ({open, onClose, onSubmit, akunToEdit, errorMessage,
     return (
         <Modal show={open} onClose={onClose}>
             <ModalHeader>
-                {akunToEdit ? "Edit Akun Guru Pamong" : "Tambah Akun Guru Pamong"}
+                {akunToEdit ? "Edit Akun Akademik" : "Tambah Akun Akademik"}
             </ModalHeader>
             <ModalBody>
                 <div className="space-y-4">
@@ -114,4 +114,4 @@ const AddUpdateAkunPamong = ({open, onClose, onSubmit, akunToEdit, errorMessage,
     );
 };
 
-export default AddUpdateAkunPamong;
+export default AddUpdateAkunAkademik;

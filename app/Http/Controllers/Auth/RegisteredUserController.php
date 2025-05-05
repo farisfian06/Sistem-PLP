@@ -42,6 +42,33 @@ class RegisteredUserController extends Controller
         ]);
     }
 
+    public function indexKaprodi()
+    {
+        $users = User::where('role', 'Kaprodi')->get();
+
+        return Inertia::render('Input/InputAkunKaprodi', [
+            'users' => $users
+        ]);
+    }
+
+    public function indexKoordinator()
+    {
+        $users = User::where('role', 'Dosen Koordinator')->get();
+
+        return Inertia::render('Input/InputAkunKoordinator', [
+            'users' => $users
+        ]);
+    }
+
+    public function indexAkademik()
+    {
+        $users = User::where('role', 'Akademik')->get();
+
+        return Inertia::render('Input/InputAkunAkademik', [
+            'users' => $users
+        ]);
+    }
+
     public function indexPJ()
     {
         $users = User::where('role', 'Guru')->get();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PendaftaranPlp;
 use App\Models\Smk;
 use App\Models\User;
 use http\Env\Response;
@@ -12,7 +13,7 @@ class SmkController extends Controller
 {
     public function index()
     {
-        $smks = Smk::orderBy('name', 'asc')->get();
+        $smks = Smk::withCount('pendaftaranPlps')->withCount('penanggungJawabs')->orderBy('name', 'asc')->get();
 
         if (request()->wantsJson()) {
             return response()->json($smks, 200);

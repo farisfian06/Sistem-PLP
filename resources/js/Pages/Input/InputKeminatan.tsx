@@ -168,10 +168,10 @@ const InputKeminatan = () => {
                                     <TableRow key={s.id}>
                                         <TableCell>{s.name}</TableCell>
                                         <TableCell className="flex justify-center gap-2">
-                                            <Button size="xs" className="bg-blue-100" onClick={() => handleEdit(s)}>
+                                            <Button size="xs" className="bg-blue-100 hover:bg-blue-300" onClick={() => handleEdit(s)}>
                                                 <HiPencil className="w-4 h-4 text-blue-600"/>
                                             </Button>
-                                            <Button size="xs" className="bg-red-100" onClick={() => handleDeleteRequest(s.id)}>
+                                            <Button size="xs" className="bg-red-100 hover:bg-red-300" onClick={() => handleDeleteRequest(s.id)}>
                                                 <HiTrash className="w-4 h-4 text-red-600"/>
                                             </Button>
                                         </TableCell>

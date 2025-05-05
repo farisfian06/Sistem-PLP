@@ -31,7 +31,7 @@ const Dashboard: React.FC = () => {
                         return (
                             <DashboardDosenGuru/>
                         )
-                    } else if (user.role === "Kaprodi" || user.role === "Dosen Koordinator" || user.role === "Akademik") {
+                    } else if (user.role === "Kaprodi" || user.role === "Dosen Koordinator" || user.role === "Akademik" || user.role === "Admin") {
                         return (
                             <DashboardAkademik/>
                         )

@@ -10,13 +10,12 @@ import {
 import {HiPencil, HiTrash} from "react-icons/hi";
 import React, {useEffect, useState} from "react";
 import SidebarComponent from "@/Components/SidebarComponent";
-import AddUpdateAkunDosen from "@/Components/AddUpdateAkunDosen";
 import {FlashProps, NewEditUser, User} from "@/types/types";
 import {Head, router, useForm, usePage} from "@inertiajs/react";
 import ConfirmationModal from "@/Components/ConfirmationModal";
-import AddUpdateAkunPamong from "@/Components/AddUpdateAkunPamong";
+import AddUpdateAkunAkademik from "@/Components/AddUpdateAkunAkademik";
 
-const InputAkunPamong = () => {
+const InputAkunAkademik = () => {
 
     const {props} = usePage();
     const {flash} = usePage<FlashProps>().props;
@@ -149,8 +148,8 @@ const InputAkunPamong = () => {
         <div className="flex flex-col lg:flex-row">
             <SidebarComponent/>
             <div className="flex-1 p-6 lg:ml-64 mt-16 max-w-full overflow-x-auto">
-                <Head title="Input Akun Guru Pamong"/>
-                <h2 className="text-xl font-bold mb-4">Akun Guru Pamong</h2>
+                <Head title="Input Akun Akademik"/>
+                <h2 className="text-xl font-bold mb-4">Akun Akademik</h2>
                 <div className="p-4 border rounded-lg bg-white shadow-md">
                     <div className="mb-4 flex justify-between items-center">
                         <Button onClick={handleAdd}>+ Tambah Akun</Button>
@@ -182,7 +181,7 @@ const InputAkunPamong = () => {
                                 {users.length === 0 ? (
                                     <TableRow>
                                         <TableCell colSpan={columns.length + 1} className="text-center">
-                                            Belum ada data akun guru pamong
+                                            Belum ada data akun akademik
                                         </TableCell>
                                     </TableRow>
                                 ) : (
@@ -226,7 +225,7 @@ const InputAkunPamong = () => {
                             </TableBody>
                         </Table>
                     </div>
-                    <AddUpdateAkunPamong
+                    <AddUpdateAkunAkademik
                         open={openModal}
                         onClose={() => {
                             setOpenModal(false);
@@ -258,4 +257,4 @@ const InputAkunPamong = () => {
     );
 };
 
-export default InputAkunPamong;
+export default InputAkunAkademik;

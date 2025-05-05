@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KeminatanController;
 use App\Http\Controllers\LogbookController;
+use App\Http\Controllers\PenanggungJawabController;
 use App\Http\Controllers\PendaftaranPlpController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SmkController;
@@ -20,6 +21,10 @@ Route::get('/', function () {
     }
     return redirect()->route('login');
 });
+
+//Route::get('/penanggung-jawab/{any?}', function () {
+//    return redirect()->route('input-smk');
+//})->where('any', '.*');
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -51,6 +56,9 @@ Route::middleware('auth')->group(function () {
         Route::middleware('role:Kaprodi,Dosen Koordinator,Akademik')->group(function () {
             Route::get('/dosen', [RegisteredUserController::class, 'indexDospem'])->name('input-akun-dosen');
             Route::get('/pamong', [RegisteredUserController::class, 'indexPamong'])->name('input-akun-pamong');
+            Route::get('/kaprodi', [RegisteredUserController::class, 'indexKaprodi'])->name('input-akun-kaprodi');
+            Route::get('/akademik', [RegisteredUserController::class, 'indexAkademik'])->name('input-akun-akademik');
+            Route::get('/koordinator', [RegisteredUserController::class, 'indexKoordinator'])->name('input-akun-koordinator');
             Route::post('/', [RegisteredUserController::class, 'pembuatanAkun'])->name('pembuatan-akun');
             Route::patch('/{id}', [RegisteredUserController::class, 'updateAkun'])->name('update-akun');
             Route::delete('/{id}', [RegisteredUserController::class, 'deleteAkun'])->name('hapus-akun');
@@ -60,9 +68,19 @@ Route::middleware('auth')->group(function () {
     Route::prefix('/smk')->group(function () {
         Route::middleware('role:Kaprodi,Dosen Koordinator,Akademik')->group(function () {
             Route::get('/', [SmkController::class, 'index'])->name('input-smk');
+            Route::get('/mahasiswa/{id}', [PendaftaranPlpController::class, 'indexBySmk'])->name('get-smk-mahasiswa');
             Route::post('/', [SmkController::class, 'store'])->name('post-smk');
             Route::patch('/{id}', [SmkController::class, 'update'])->name('patch-smk');
             Route::delete('/{id}', [SmkController::class, 'destroy'])->name('delete-smk');
+        });
+    });
+
+    Route::prefix('/smk/penanggung-jawab')->group(function () {
+        Route::middleware('role:Kaprodi,Dosen Koordinator,Akademik')->group(function () {
+            Route::get('/{id}', [PenanggungJawabController::class, 'show'])->name('get-penanggung-jawab');
+            Route::post('/', [PenanggungJawabController::class, 'store'])->name('post-penanggung-jawab');
+            Route::patch('/{id}', [PenanggungJawabController::class, 'update'])->name('patch-penanggung-jawab');
+            Route::delete('/{id}', [PenanggungJawabController::class, 'destroy'])->name('delete-penanggung-jawab');
         });
     });
 
