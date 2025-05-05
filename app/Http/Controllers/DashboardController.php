@@ -47,7 +47,7 @@ class DashboardController extends Controller
                 'logbookDiajukan' => $logbookDiajukan,
                 'logbookDitolak' => $logbookDitolak,
             ]);
-        } else if ($user->role == "Kaprodi" || $user->role == "Dosen Koordinator" || $user->role == "Akademik") {
+        } else if ($user->role == "Kaprodi" || $user->role == "Dosen Koordinator" || $user->role == "Akademik" || $user->role == "Admin") {
 
             $menungguPembagianPlp = PendaftaranPlp::whereNull('penempatan')->count();
             $mahasiswaTerdaftarPlp = PendaftaranPlp::whereNotNull('penempatan')->count();

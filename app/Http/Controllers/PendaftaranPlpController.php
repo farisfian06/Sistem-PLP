@@ -33,17 +33,33 @@ class PendaftaranPlpController extends Controller
         );
     }
 
-    public function indexAll()
+    public function indexBySmk($id)
     {
-        $pendaftaranPlp = PendaftaranPlp::with(['user', 'pilihanSmk1', 'pilihanSmk2', 'keminatan'])->latest()->get();
-        $smk = Smk::orderBy('name')->orderBy('name', 'asc')->get(['id', 'name']);
-        $dospem = User::where('role', 'Dosen Pembimbing')->orderBy('name', 'asc')->get();
+        $smks = Smk::withCount('pendaftaranPlps')->withCount('penanggungJawabs')->orderBy('name', 'asc')->get();;
+        $pendaftaranPlp = PendaftaranPlp::where('penempatan', $id)->with('user.mahasiswaPamong')->latest()->get();
 
         if (request()->wantsJson()) {
             return response()->json($pendaftaranPlp, 201);
         }
 
-        return Inertia::render('PembagianPlp', ['pendaftaranPlp' => $pendaftaranPlp, 'smk' => $smk, 'dospem' => $dospem]);
+        return Inertia::render('Input/InputSmk', [
+            'pendaftaranPlps' => $pendaftaranPlp,
+            'smks' => $smks,
+        ]);
+    }
+
+    public function indexAll()
+    {
+        $pendaftaranPlp = PendaftaranPlp::with(['user', 'pilihanSmk1', 'pilihanSmk2', 'keminatan'])->latest()->get();
+        $smk = Smk::orderBy('name')->orderBy('name', 'asc')->get(['id', 'name']);
+        $dospem = User::where('role', 'Dosen Pembimbing')->orderBy('name', 'asc')->get();
+        $guru = User::where('role', 'Guru')->orderBy('name', 'asc')->get();
+
+        if (request()->wantsJson()) {
+            return response()->json($pendaftaranPlp, 201);
+        }
+
+        return Inertia::render('PembagianPlp', ['pendaftaranPlp' => $pendaftaranPlp, 'smk' => $smk, 'dospem' => $dospem, 'guru' => $guru]);
     }
 
 

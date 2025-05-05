@@ -89,7 +89,7 @@ const AddUpdateAkunDosen = ({open, onClose, onSubmit, akunToEdit, errorMessage, 
     return (
         <Modal show={open} onClose={onClose}>
             <ModalHeader>
-                {akunToEdit ? "Edit Akun Dosen" : "Tambah Akun Dosen"}
+                {akunToEdit ? "Edit Akun Dosen Pembimbing" : "Tambah Akun Dosen Pembimbing"}
             </ModalHeader>
             <ModalBody>
                 <div className="space-y-4">

@@ -138,8 +138,8 @@ const InputAkunDosen = () => {
     }, [flash]);
 
     const columns = [
-        {label: "NIP", key: "nip", group: "details"},
         {label: "Nama", key: "name"},
+        {label: "NIP", key: "nip", group: "details"},
         {label: "No HP", key: "phone", group: "details"},
         {label: "Email", key: "email"},
     ];
@@ -206,17 +206,17 @@ const InputAkunDosen = () => {
                                             ))}
                                             <TableCell className="flex justify-center gap-2">
                                                 <Button size="xs" onClick={() => handleEdit(akun)}
-                                                        className="bg-blue-100 text-blue-600">
-                                                    <HiPencil className="w-4 h-4"/>
+                                                        className="bg-blue-100 hover:bg-blue-300">
+                                                    <HiPencil className="w-4 h-4 text-blue-600"/>
                                                 </Button>
                                                 <Button
                                                     size="xs"
                                                     onClick={() => {
                                                         handleDeleteRequest(akun.id)
                                                     }}
-                                                    className=" bg-red-100 text-red-600"
+                                                    className="bg-red-100 hover:bg-red-300"
                                                 >
-                                                    <HiTrash className="w-4 h-4"/>
+                                                    <HiTrash className="w-4 h-4 text-red-600"/>
                                                 </Button>
                                             </TableCell>
                                         </TableRow>

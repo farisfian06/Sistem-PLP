@@ -1,12 +1,14 @@
 import React, {useState, useMemo, useEffect} from "react";
 import {Head, router, usePage} from "@inertiajs/react";
 import {Button, Table, TableHead, TableBody, TableRow, TableCell, TableHeadCell, Alert} from "flowbite-react";
-import {HiPencil, HiTrash} from "react-icons/hi";
+import {HiPencil, HiTrash, HiUserGroup, HiAcademicCap } from "react-icons/hi";
 import SidebarComponent from "@/Components/SidebarComponent";
 import AddUpdateSmk from "@/Components/AddUpdateSmk";
 import {FlashProps, Smk} from "@/types/types";
 import AddUpdateAkunDosen from "@/Components/AddUpdateAkunDosen";
 import ConfirmationModal from "@/Components/ConfirmationModal";
+import InputDataPJ from "@/Pages/Input/InputDataPJ";
+import DataMahasiswaPLP from "@/Pages/Input/DataMahasiswaPLP";
 
 const InputSmk = () => {
 
@@ -16,7 +18,17 @@ const InputSmk = () => {
     const smks = Array.isArray(props.smks) ? props.smks : [];
 
     const [openModal, setOpenModal] = useState(false);
+    const [openDataPJ, setopenDataPJ] = useState(false);
+    const [openDataMahasiswa, setopenDataMahasiswa] = useState(false);
     const [smkToEdit, setSmkToEdit] = useState<Smk | null>(null);
+    const [smkToSeePJ, setSmkToSeePJ] = useState({
+        id: null,
+        name: null,
+    });
+    const [smkToSeeMahasiswa, setSmkToSeeMahasiswa] = useState({
+        id: null,
+        name: null,
+    });
     const [smkToDelete, setSmkToDelete] = useState<number | null>(null);
     const [processing, setProcessing] = useState(false);
     const [openConfirmation, setOpenConfirmation] = useState(false);
@@ -69,6 +81,38 @@ const InputSmk = () => {
         setSmkToDelete(id);
         setOpenConfirmation(true);
     };
+
+    const toggleDataPJ = (smk: any) => {
+        if(openDataPJ) {
+            setSmkToSeePJ({
+                id: null,
+                name: null,
+            });
+            setopenDataPJ(false);
+        } else {
+            setSmkToSeePJ({
+                id: smk.id,
+                name: smk.name,
+            });
+            setopenDataPJ(true);
+        }
+    }
+
+    const toggleDataMahasiswa = (smk: any) => {
+        if(openDataMahasiswa) {
+            setSmkToSeeMahasiswa({
+                id: null,
+                name: null,
+            });
+            setopenDataMahasiswa(false);
+        } else {
+            setSmkToSeeMahasiswa({
+                id: smk.id,
+                name: smk.name,
+            });
+            setopenDataMahasiswa(true);
+        }
+    }
 
     const handleSubmit = (newSmk: Smk) => {
         setProcessing(true);
@@ -145,10 +189,11 @@ const InputSmk = () => {
                 <div className="p-4 border rounded-lg bg-white shadow-md">
                     <div className="mb-4 flex justify-between items-center ">
                         <Button onClick={handleAdd}>+ Tambah SMK</Button>
+                        {/*<Button onClick={() => {console.log(smks)}}>DEBUG</Button>*/}
                     </div>
                     {
-                        feedback.status &&
-                        <Alert color={feedback.status === "error" ? "failure" : "success"} className="mb-4" onDismiss={() => setFeedback({
+                        feedback.status === "success" &&
+                        <Alert color={"success"} className="mb-4" onDismiss={() => setFeedback({
                             status: "",
                             title: "",
                             message: "",
@@ -156,17 +201,21 @@ const InputSmk = () => {
                             <span className="font-medium">{feedback.title}</span> {feedback.message}
                         </Alert>
                     }
+
                     <Table striped hoverable>
                         <TableHead>
                             <TableRow>
-                                <TableHeadCell className="text-center">Nama sekolah</TableHeadCell>
+                                <TableHeadCell>Nama sekolah</TableHeadCell>
+                                <TableHeadCell className="text-center">Mahasiswa Terdaftar</TableHeadCell>
+                                <TableHeadCell className="text-center">Total PJ</TableHeadCell>
+                                <TableHeadCell className="text-center">Data</TableHeadCell>
                                 <TableHeadCell className="text-center">Aksi</TableHeadCell>
                             </TableRow>
                         </TableHead>
-                        <TableBody className="text-center">
+                        <TableBody className="divide-y">
                             {sortedSmkList.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan={2} className="text-center">
+                                    <TableCell colSpan={5} className="text-center">
                                         Belum ada data sekolah
                                     </TableCell>
                                 </TableRow>
@@ -174,11 +223,23 @@ const InputSmk = () => {
                                 sortedSmkList.map((s) => (
                                     <TableRow key={s.id}>
                                         <TableCell>{s.name}</TableCell>
+                                        <TableCell className="text-center">{s.pendaftaran_plps_count}</TableCell>
+                                        <TableCell className="text-center">{s.penanggung_jawabs_count}</TableCell>
+                                        <TableCell>
+                                            <div className="m-auto flex gap-2 justify-center">
+                                                <Button size="xs" className="bg-gray-100 hover:bg-gray-300" onClick={() => toggleDataPJ(s)}>
+                                                    <HiUserGroup className="w-4 h-4 text-gray-600"/> <span className="m-3 text-gray-600">Lihat Penanggung Jawab</span>
+                                                </Button>
+                                                <Button size="xs" className="bg-gray-100 hover:bg-gray-300" onClick={() => toggleDataMahasiswa(s)}>
+                                                    <HiAcademicCap className="w-4 h-4 text-gray-600"/> <span className="m-3 text-gray-600">Lihat Mahasiswa Terdaftar</span>
+                                                </Button>
+                                            </div>
+                                        </TableCell>
                                         <TableCell className="flex justify-center gap-2">
-                                            <Button size="xs" className="bg-blue-100" onClick={() => handleEdit(s)}>
+                                            <Button size="xs" className="bg-blue-100 hover:bg-blue-300" onClick={() => handleEdit(s)}>
                                                 <HiPencil className="w-4 h-4 text-blue-600"/>
                                             </Button>
-                                            <Button size="xs" className="bg-red-100" onClick={() => handleDeleteRequest(s.id)}>
+                                            <Button size="xs" className="bg-red-100 hover:bg-red-300" onClick={() => handleDeleteRequest(s.id)}>
                                                 <HiTrash className="w-4 h-4 text-red-600"/>
                                             </Button>
                                         </TableCell>
@@ -188,6 +249,7 @@ const InputSmk = () => {
                         </TableBody>
                     </Table>
                 </div>
+
                 <AddUpdateSmk
                     open={openModal}
                     onClose={() => {
@@ -200,6 +262,22 @@ const InputSmk = () => {
                     errorMessage={errorMessage}
                     onProcess={processing}
                 />
+                <InputDataPJ
+                    open={openDataPJ}
+                    onClose={() => {
+                        setopenDataPJ(false);
+                    }}
+                    smk={smkToSeePJ!}
+
+                />
+                <DataMahasiswaPLP
+                    open={openDataMahasiswa}
+                    onClose={() => {
+                        setopenDataMahasiswa(false);
+                    }}
+                    smk={smkToSeeMahasiswa!}
+                />
+
 
                 <ConfirmationModal
                     open={openConfirmation}

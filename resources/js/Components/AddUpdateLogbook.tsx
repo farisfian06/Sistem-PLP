@@ -92,7 +92,7 @@ const AddUpdateLogbook: React.FC<AddUpdateLogbookProps> = ({
                     <h3 className="text-xl font-medium text-gray-900">{logbookToEdit ? "Edit Logbook" : "Tambah Logbook"}</h3>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <Label htmlFor="tanggal">Tanggal</Label>
+                            <Label htmlFor="tanggal">Tanggal Kegiatan</Label>
                             <TextInput
                                 id="tanggal"
                                 type="date"
@@ -124,7 +124,7 @@ const AddUpdateLogbook: React.FC<AddUpdateLogbookProps> = ({
                             </div>
                         </div>
                         <div>
-                            <Label htmlFor="keterangan">Keterangan</Label>
+                            <Label htmlFor="keterangan">Uraian Kegiatan</Label>
                             <Textarea
                                 id="keterangan"
                                 value={data.keterangan || ""}
