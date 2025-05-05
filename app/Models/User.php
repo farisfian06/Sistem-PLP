@@ -84,4 +84,9 @@ class User extends Authenticatable
             ->withPivot('status')
             ->withTimestamps();
     }
+
+    public function temporaryPassword()
+    {
+        return $this->hasOne(TemporaryPassword::class);
+    }
 }

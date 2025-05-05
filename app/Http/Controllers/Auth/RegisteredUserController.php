@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\TemporaryPassword;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -26,7 +27,19 @@ class RegisteredUserController extends Controller
 
     public function indexDospem()
     {
-        $users = User::where('role', 'Dosen Pembimbing')->get();
+        $users = User::where('role', 'Dosen Pembimbing')
+            ->with('temporaryPassword')
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                    'details' => $user->details,
+                    'temporary_password' => $user->temporaryPassword->password ?? null,
+                ];
+            });
 
         return Inertia::render('Input/InputAkunDosen', [
             'users' => $users
@@ -35,7 +48,19 @@ class RegisteredUserController extends Controller
 
     public function indexPamong()
     {
-        $users = User::where('role', 'Guru')->get();
+        $users = User::where('role', 'Guru')
+            ->with('temporaryPassword')
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                    'details' => $user->details,
+                    'temporary_password' => $user->temporaryPassword->password ?? null,
+                ];
+            });
 
         return Inertia::render('Input/InputAkunPamong', [
             'users' => $users
@@ -44,7 +69,19 @@ class RegisteredUserController extends Controller
 
     public function indexKaprodi()
     {
-        $users = User::where('role', 'Kaprodi')->get();
+        $users = User::where('role', 'Kaprodi')
+            ->with('temporaryPassword')
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                    'details' => $user->details,
+                    'temporary_password' => $user->temporaryPassword->password ?? null,
+                ];
+            });
 
         return Inertia::render('Input/InputAkunKaprodi', [
             'users' => $users
@@ -53,7 +90,19 @@ class RegisteredUserController extends Controller
 
     public function indexKoordinator()
     {
-        $users = User::where('role', 'Dosen Koordinator')->get();
+        $users = User::where('role', 'Dosen Koordinator')
+            ->with('temporaryPassword')
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                    'details' => $user->details,
+                    'temporary_password' => $user->temporaryPassword->password ?? null,
+                ];
+            });
 
         return Inertia::render('Input/InputAkunKoordinator', [
             'users' => $users
@@ -62,7 +111,19 @@ class RegisteredUserController extends Controller
 
     public function indexAkademik()
     {
-        $users = User::where('role', 'Akademik')->get();
+        $users = User::where('role', 'Akademik')
+            ->with('temporaryPassword')
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                    'details' => $user->details,
+                    'temporary_password' => $user->temporaryPassword->password ?? null,
+                ];
+            });
 
         return Inertia::render('Input/InputAkunAkademik', [
             'users' => $users
@@ -133,7 +194,7 @@ class RegisteredUserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => 'required',
             'role' => 'required|in:Kaprodi,Dosen Koordinator,Dosen Pembimbing,Akademik,Mahasiswa,Observer,Guru',
             'details' => 'nullable|array'
         ]);
@@ -147,6 +208,11 @@ class RegisteredUserController extends Controller
         ]);
 
         event(new Registered($user));
+
+        TemporaryPassword::create([
+            'user_id' => $user->id,
+            'password' => $request->password, // Plaintext (you can encrypt if you want)
+        ]);
 
         if (request()->wantsJson()) {
             return response()->json([

@@ -20,7 +20,6 @@ const AddUpdateAkunDosen = ({open, onClose, onSubmit, akunToEdit, errorMessage, 
         email: "",
         role: "Dosen Pembimbing",
         password: "",
-        password_confirmation: "",
     });
 
     const resetForm = () => {
@@ -31,7 +30,6 @@ const AddUpdateAkunDosen = ({open, onClose, onSubmit, akunToEdit, errorMessage, 
             email: "",
             role: "Dosen Pembimbing",
             password: "",
-            password_confirmation: "",
         });
     };
 
@@ -97,8 +95,6 @@ const AddUpdateAkunDosen = ({open, onClose, onSubmit, akunToEdit, errorMessage, 
                     {inputField("NIP", "details", "nip")}
                     {inputField("No HP", "details", "phone")}
                     {inputField("Email", "email")}
-                    {!akunToEdit && inputField("Password", "password", "none", "password")}
-                    {!akunToEdit && inputField("Konfirmasi Password", "password_confirmation", "none", "password")}
                     <div className={`${!errorMessage ? 'hidden' : ''} text-red-500`}>
                         {errorMessage}
                     </div>

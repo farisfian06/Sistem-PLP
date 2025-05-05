@@ -5,7 +5,7 @@ import {
     TableBody,
     TableRow,
     TableCell,
-    TableHeadCell, Alert,
+    TableHeadCell, Alert, Badge,
 } from "flowbite-react";
 import {HiPencil, HiTrash} from "react-icons/hi";
 import React, {useEffect, useState} from "react";
@@ -14,6 +14,7 @@ import {FlashProps, NewEditUser, User} from "@/types/types";
 import {Head, router, useForm, usePage} from "@inertiajs/react";
 import ConfirmationModal from "@/Components/ConfirmationModal";
 import AddUpdateAkunKoordinator from "@/Components/AddUpdateAkunKoordinator";
+import {generateRandomPassword} from "@/utils/password";
 
 const InputAkunKoordinator = () => {
 
@@ -99,6 +100,9 @@ const InputAkunKoordinator = () => {
                 }
             });
         } else {
+            const generatedPassword = generateRandomPassword();
+            newAkun.password = generatedPassword;
+
             router.post(`/akun`, newAkun as Record<string, any>,{
                 onSuccess: () => {
                     setProcessing(false);
@@ -142,6 +146,7 @@ const InputAkunKoordinator = () => {
         {label: "NIP", key: "nip", group: "details"},
         {label: "No HP", key: "phone", group: "details"},
         {label: "Email", key: "email"},
+        {label: "Initial Password", key: "temporary_password"},
     ];
 
     return (
@@ -187,23 +192,34 @@ const InputAkunKoordinator = () => {
                                 ) : (
                                     users.slice().reverse().map((akun) => (
                                         <TableRow key={akun.id}>
-                                            {columns.map((column) => (
-                                                <TableCell key={column.key}>
-                                                    {
-                                                        column.group === "details"
-                                                            ? (() => {
-                                                                    try {
-                                                                        const details = JSON.parse(akun[column.group as keyof NewEditUser].toString())[column.key as keyof NewEditUser]
-                                                                        return details;
-                                                                    } catch (e) {
-                                                                        return "";
-                                                                    }
-                                                                }
-                                                            )()
-                                                            : (akun[column.key as keyof NewEditUser])
+                                            {columns.map((column) => {
+                                                const isDetailsGroup = column.group === "details";
+                                                const isTempPassword = column.key === "temporary_password";
+                                                const value = akun[column.key as keyof NewEditUser];
+
+                                                let cellContent;
+
+                                                if (isDetailsGroup) {
+                                                    try {
+                                                        const details = JSON.parse(akun[column.group as keyof NewEditUser].toString());
+                                                        cellContent = details[column.key as keyof NewEditUser] ?? "";
+                                                    } catch (e) {
+                                                        cellContent = "";
                                                     }
-                                                </TableCell>
-                                            ))}
+                                                } else if (isTempPassword) {
+                                                    cellContent = value
+                                                        ? value
+                                                        : <Badge color="success" className="w-fit">Password diubah</Badge>;
+                                                } else {
+                                                    cellContent = value;
+                                                }
+
+                                                return (
+                                                    <TableCell key={column.key}>
+                                                        {cellContent}
+                                                    </TableCell>
+                                                );
+                                            })}
                                             <TableCell className="flex justify-center gap-2">
                                                 <Button size="xs" onClick={() => handleEdit(akun)}
                                                         className="bg-blue-100 hover:bg-blue-300">
