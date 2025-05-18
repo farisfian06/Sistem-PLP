@@ -174,24 +174,33 @@ class PendaftaranPlpController extends Controller
                 if ($pendaftaran) {
                     $mahasiswa = $pendaftaran->user;
 
-                    // menghandle empty string menjadi null saat di update
-                    $penempatan = ($data['penempatan'] ?? '') !== '' ? $data['penempatan'] : null;
-                    $dosenPembimbing = ($data['dosen_pembimbing'] ?? '') !== '' ? $data['dosen_pembimbing'] : null;
-                    $guruPamong = ($data['guru_pamong'] ?? '') !== '' ? $data['guru_pamong'] : null;
+                    // Only update penempatan if it exists in request (even if null or NaN)
+                    if (array_key_exists('penempatan', $data)) {
+                        $pendaftaran->update([
+                            'penempatan' => $data['penempatan'], // allow null or actual value
+                        ]);
+                    }
 
-                    $pendaftaran->update([
-                        'penempatan' => $penempatan,
-                    ]);
+                    $mahasiswaUpdateData = [];
 
-                    $mahasiswa->update([
-                        'dosen_id' => $dosenPembimbing,
-                        'guru_id' => $guruPamong,
-                    ]);
+                    if (array_key_exists('dosen_pembimbing', $data)) {
+                        $mahasiswaUpdateData['dosen_id'] = $data['dosen_pembimbing']; // can be null
+                    }
+
+                    if (array_key_exists('guru_pamong', $data)) {
+                        $mahasiswaUpdateData['guru_id'] = $data['guru_pamong']; // can be null
+                    }
+
+                    if (!empty($mahasiswaUpdateData)) {
+                        $mahasiswa->update($mahasiswaUpdateData);
+                    }
 
                     $updated[] = $pendaftaran;
                 }
             }
         });
+
+
 
         return back()->with('success', 'Data pada database telah berhasil diperbarui.');
     }
