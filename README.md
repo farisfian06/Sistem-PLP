@@ -1,66 +1,151 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistem PLP (Pengenalan Lingkungan Persekolahan)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem PLP adalah aplikasi web untuk mengelola proses Pengenalan Lingkungan Persekolahan (PLP) atau praktik mengajar di sekolah menengah kejuruan (SMK). Aplikasi ini memfasilitasi seluruh proses mulai dari pendaftaran mahasiswa, penempatan di SMK, hingga pencatatan dan validasi kegiatan harian (logbook).
 
-## About Laravel
+## Teknologi yang Digunakan
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Backend
+- [Laravel](https://laravel.com/) - Framework PHP untuk pengembangan web
+- MySQL - Database relasional
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Frontend
+- [React](https://reactjs.org/) - Library JavaScript untuk membangun antarmuka pengguna
+- [TypeScript](https://www.typescriptlang.org/) - Superset JavaScript dengan pengetikan statis
+- [Inertia.js](https://inertiajs.com/) - Library untuk menghubungkan Laravel dengan React
+- [Tailwind CSS](https://tailwindcss.com/) - Framework CSS utility-first
+- [Flowbite React](https://flowbite-react.com/) - Komponen UI berbasis Tailwind CSS
+- [React Icons](https://react-icons.github.io/react-icons/) - Library ikon untuk React
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Build Tools
+- [Vite](https://vitejs.dev/) - Build tool dan development server
+- [Laravel Vite Plugin](https://github.com/laravel/vite-plugin) - Plugin untuk integrasi Vite dengan Laravel
 
-## Learning Laravel
+## Fitur Utama
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Manajemen Pengguna
+- Multi-role: Mahasiswa, Guru, Dosen Pembimbing, Kaprodi, Dosen Koordinator, dan Akademik
+- Autentikasi dan otorisasi berbasis peran
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Pendaftaran PLP
+- Mahasiswa dapat mendaftar untuk program PLP
+- Memilih keminatan (spesialisasi)
+- Memilih preferensi SMK (2 pilihan)
+- Input nilai PLP 1 dan Micro Teaching
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Penempatan dan Pembagian
+- Admin dapat menempatkan mahasiswa ke SMK
+- Penugasan dosen pembimbing dan guru pamong
+- Pengelolaan data SMK dan penanggung jawab
 
-## Laravel Sponsors
+### Logbook
+- Mahasiswa dapat mencatat kegiatan harian
+- Dokumentasi kegiatan dengan detail waktu
+- Sistem persetujuan dua tingkat (guru pamong dan dosen pembimbing)
+- Status logbook: pending, approved, rejected
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Dashboard dan Laporan
+- Tampilan ringkasan untuk semua pengguna
+- Akses ke data sesuai dengan peran pengguna
 
-### Premium Partners
+## Instalasi
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Prasyarat
+- PHP >= 8.1
+- Composer
+- Node.js dan npm
+- MySQL
 
-## Contributing
+### Langkah Instalasi
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. Clone repositori
+   ```bash
+   git clone https://github.com/farisfian06/Sistem-PLP.git
+   cd Sistem-PLP
+   ```
 
-## Code of Conduct
+2. Instal dependensi PHP
+   ```bash
+   composer install
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+3. Instal dependensi JavaScript
+   ```bash
+   npm install
+   ```
 
-## Security Vulnerabilities
+4. Salin file .env.example menjadi .env dan konfigurasi database
+   ```bash
+   cp .env.example .env
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+5. Generate application key
+   ```bash
+   php artisan key:generate
+   ```
 
-## License
+6. Jalankan migrasi database
+   ```bash
+   php artisan migrate
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+7. Kompilasi aset frontend
+   ```bash
+   npm run build
+   ```
+
+8. Jalankan server development
+   ```bash
+   php artisan serve
+   ```
+
+9. Akses aplikasi di browser: http://localhost:8000
+
+## Penggunaan
+
+### Login
+- Gunakan kredensial yang sesuai dengan peran Anda
+- Sistem akan mengarahkan ke dashboard yang sesuai dengan peran
+
+### Untuk Mahasiswa
+1. Daftar untuk program PLP
+2. Isi logbook kegiatan harian
+3. Lihat status persetujuan logbook
+
+### Untuk Guru Pamong dan Dosen Pembimbing
+1. Validasi logbook mahasiswa
+2. Pantau kemajuan mahasiswa
+
+### Untuk Admin (Kaprodi, Dosen Koordinator, Akademik)
+1. Kelola data pengguna
+2. Kelola data SMK
+3. Lakukan penempatan mahasiswa
+4. Pantau seluruh kegiatan PLP
+
+## Struktur Proyek
+
+```
+Sistem-PLP/
+├── app/                    # Kode PHP aplikasi
+│   ├── Http/               
+│   │   ├── Controllers/    # Controller aplikasi
+│   │   └── Middleware/     # Middleware aplikasi
+│   └── Models/             # Model database
+├── database/               # Migrasi dan seeder database
+├── resources/              
+│   ├── js/                 # Kode frontend React
+│   │   ├── Components/     # Komponen React
+│   │   └── Pages/          # Halaman React
+│   └── views/              # Template blade
+├── routes/                 # Definisi rute aplikasi
+└── public/                 # Aset publik
+```
+
+## Kontributor
+
+- [Faris Ihsan Alifian](https://github.com/farisfian06)
+- [Halilintar Daiva Dirgantara](https://github.com/HalDaiva)
+- [Ila Virnanda Fitriana](https://github.com/ila-vf)
+
+## Kontak
+
+Untuk pertanyaan atau dukungan, silakan hubungi [halilintardaiva@student.ub.ac.id](mailto:halilintardaiva@student.ub.ac.id)
