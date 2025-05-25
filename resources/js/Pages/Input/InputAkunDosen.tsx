@@ -154,8 +154,8 @@ const InputAkunDosen = () => {
         <div className="flex flex-col lg:flex-row">
             <SidebarComponent/>
             <div className="flex-1 p-6 lg:ml-64 mt-16 max-w-full overflow-x-auto">
-                <Head title="Input Akun Dosen"/>
-                <h2 className="text-xl font-bold mb-4">Akun Dosen</h2>
+                <Head title="Input Akun Dosen Pembimbing"/>
+                <h2 className="text-xl font-bold mb-4">Akun Dosen Pembimbing</h2>
                 <div className="p-4 border rounded-lg bg-white shadow-md">
                     <div className="mb-4 flex justify-between items-center">
                         <Button onClick={handleAdd}>+ Tambah Akun</Button>

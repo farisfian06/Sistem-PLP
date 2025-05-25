@@ -25,6 +25,23 @@ class RegisteredUserController extends Controller
         return Inertia::render('Auth/Register');
     }
 
+    public function indexMahasiswa() {
+
+        $user = Auth::user();
+
+        if ($user->role == "Guru") {
+            $users = User::where('role', 'Mahasiswa')->where('guru_id', $user->id)->with(['mahasiswaPamong', 'mahasiswaDospem', 'pendaftaranPlp.penempatanSmk'])->get();
+        } else if ($user->role == "Dosen Pembimbing") {
+            $users = User::where('role', 'Mahasiswa')->where('dosen_id', $user->id)->with(['mahasiswaPamong', 'mahasiswaDospem', 'pendaftaranPlp.penempatanSmk'])->get();
+        } else {
+            $users = User::where('role', 'Mahasiswa')->with(['mahasiswaPamong', 'mahasiswaDospem', 'pendaftaranPlp.penempatanSmk'])->get();
+        }
+
+        return Inertia::render('DataMahasiswa', [
+            'users' => $users
+        ]);
+    }
+
     public function indexDospem()
     {
         $users = User::where('role', 'Dosen Pembimbing')

@@ -66,13 +66,13 @@ class LogbookController extends Controller
 
     public function indexAll()
     {
-        $logbooks = Logbook::latest()->get();
+        $logbooks = Logbook::latest()->with('user')->get();
 
         if (request()->wantsJson()) {
             return response()->json($logbooks, 201);
         }
 
-        return Inertia::render('Logbooks', [
+        return Inertia::render('LogbookAll', [
             'logbooks' => $logbooks
         ]);
     }

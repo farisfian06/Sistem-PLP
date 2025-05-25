@@ -122,13 +122,13 @@ const Logbooks = () => {
                                                         "gray"
                                             } className="w-fit">{item.status!.charAt(0).toUpperCase() + item.status!.slice(1)}</Badge></TableCell>
                                             <TableCell className="flex space-x-2">
-                                                <Button disabled={item.status !== "pending"} size="xs" className={item.status === "pending" ? "bg-blue-100" :  "bg-gray-200"} onClick={() => {
+                                                <Button disabled={item.status !== "pending"} size="xs" className={item.status === "pending" ? "bg-blue-100 hover:bg-blue-300" :  "bg-gray-200"} onClick={() => {
                                                     setLogbookToEdit(item);
                                                     setShowAddUpdateLogbook(true);
                                                 }}>
                                                     <HiPencil className={`w-4 h-4 text-${item.status === "pending" ? "blue" : "gray"}-600`}/>
                                                 </Button>
-                                                <Button size="xs" className="bg-red-100" onClick={() => {
+                                                <Button size="xs" className="bg-red-100 hover:bg-red-300" onClick={() => {
                                                     handleDeleteRequest(item.id);
                                                 }}>
                                                     <HiTrash className="w-4 h-4 text-red-600"/>

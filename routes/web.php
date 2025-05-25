@@ -42,7 +42,7 @@ Route::middleware('auth')->group(function () {
             Route::patch('/validasi', [LogbookController::class, 'updateMultipleApproverStatus']);
         });
         Route::middleware('role:Kaprodi,Dosen Koordinator,Akademik')->group(function () {
-            Route::get('/all', [LogbookController::class, 'indexAll']);
+            Route::get('/all', [LogbookController::class, 'indexAll'])->name('logbooks.indexAll');
         });
     });
 
@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('/akun')->group(function () {
         Route::middleware('role:Kaprodi,Dosen Koordinator,Akademik')->group(function () {
+            Route::get('/mahasiswa', [RegisteredUserController::class, 'indexMahasiswa'])->name('input-akun-mahasiswa');
             Route::get('/dosen', [RegisteredUserController::class, 'indexDospem'])->name('input-akun-dosen');
             Route::get('/pamong', [RegisteredUserController::class, 'indexPamong'])->name('input-akun-pamong');
             Route::get('/kaprodi', [RegisteredUserController::class, 'indexKaprodi'])->name('input-akun-kaprodi');
@@ -62,6 +63,12 @@ Route::middleware('auth')->group(function () {
             Route::post('/', [RegisteredUserController::class, 'pembuatanAkun'])->name('pembuatan-akun');
             Route::patch('/{id}', [RegisteredUserController::class, 'updateAkun'])->name('update-akun');
             Route::delete('/{id}', [RegisteredUserController::class, 'deleteAkun'])->name('hapus-akun');
+        });
+    });
+
+    Route::prefix('/mahasiswa')->group(function () {
+        Route::middleware('role:Kaprodi,Dosen Koordinator,Akademik,Guru,Dosen Pembimbing')->group(function () {
+            Route::get('/', [RegisteredUserController::class, 'indexMahasiswa'])->name('input-akun-mahasiswa');
         });
     });
 

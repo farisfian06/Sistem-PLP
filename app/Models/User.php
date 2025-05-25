@@ -66,6 +66,11 @@ class User extends Authenticatable
         return $this->belongsTo(User::class, 'guru_id');
     }
 
+    public function mahasiswaDospem()
+    {
+        return $this->belongsTo(User::class, 'dosen_id');
+    }
+
     /**
      * The users that were referred by this user.
      */
@@ -77,6 +82,11 @@ class User extends Authenticatable
     public function dosenPembimbing()
     {
         return $this->hasMany(User::class, 'dosen_id');
+    }
+
+    public function pendaftaranPlp()
+    {
+        return $this->hasOne(PendaftaranPlp::class);
     }
 
     public function logbooksToApprove()

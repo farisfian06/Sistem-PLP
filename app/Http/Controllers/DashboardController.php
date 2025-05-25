@@ -67,15 +67,4 @@ class DashboardController extends Controller
         return Inertia::render('Dashboard/Dashboard');
     }
 
-//    public function index()
-//    {
-//        $keminatans = Keminatan::all();
-//        if (request()->wantsJson()) {
-//            return response()->json($keminatans, 200);
-//        }
-//
-//        return Inertia::render('Dashboard/Dashboard', [
-//            'keminatans' => $keminatans
-//        ]);
-//    }
 }

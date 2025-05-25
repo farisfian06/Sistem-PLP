@@ -171,7 +171,7 @@ const PembagianPlp = () => {
                                 <TableHeadCell>NIM</TableHeadCell>
                                 <TableHeadCell>Nama Mahasiswa</TableHeadCell>
                                 <TableHeadCell>Waktu Pendaftaran</TableHeadCell>
-                                <TableHeadCell>Pilihan SMK</TableHeadCell>
+                                <TableHeadCell>Penempatan SMK</TableHeadCell>
                                 <TableHeadCell>Dosen Pembimbing</TableHeadCell>
                                 <TableHeadCell>Guru Pamong</TableHeadCell>
                                 <TableHeadCell className="text-center">Aksi</TableHeadCell>
@@ -211,7 +211,7 @@ const PembagianPlp = () => {
                                         })}</TableCell>
                                         <TableCell className="flex justify-center gap-2">
                                             <Button size="xs" onClick={() => handleView(mhs)}
-                                                    className="text-gray-600 bg-gray-100">
+                                                    className="text-gray-600 bg-gray-100 hover:bg-gray-300">
                                                 <HiEye className="w-4 h-4"/>
                                             </Button>
                                             {/*<Button size="xs" color="blue" className="bg-blue-100 text-blue-600">*/}

@@ -41,7 +41,6 @@ const DataMahasiswaPLP: React.FC<DataPJProps> = ({
         title: "",
         message: "",
     })
-    const [errorMessage, setErrorMessage] = useState("")
 
 
     useEffect(() => {

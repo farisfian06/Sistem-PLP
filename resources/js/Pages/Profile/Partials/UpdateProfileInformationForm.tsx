@@ -124,28 +124,28 @@ export default function UpdateProfileInformation({
                             ...data.details,
                             phone: e.target.value
                         })}
-                        required
+                        required={user?.role !== "Mahasiswa"}
                     />
 
                     <InputError className="mt-2" message={errors.name}/>
                 </div>
 
                 {/*input email*/}
-                <div>
-                    <InputLabel htmlFor="email" value="Email"/>
+                {/*<div>*/}
+                {/*    <InputLabel htmlFor="email" value="Email"/>*/}
 
-                    <TextInput
-                        id="email"
-                        type="email"
-                        className="mt-1 block w-full"
-                        value={data.email}
-                        onChange={(e) => setData('email', e.target.value)}
-                        required
-                        autoComplete="username"
-                    />
+                {/*    <TextInput*/}
+                {/*        id="email"*/}
+                {/*        type="email"*/}
+                {/*        className="mt-1 block w-full"*/}
+                {/*        value={data.email}*/}
+                {/*        onChange={(e) => setData('email', e.target.value)}*/}
+                {/*        required*/}
+                {/*        autoComplete="username"*/}
+                {/*    />*/}
 
-                    <InputError className="mt-2" message={errors.email}/>
-                </div>
+                {/*    <InputError className="mt-2" message={errors.email}/>*/}
+                {/*</div>*/}
 
                 {/*input angkatan jika role mahasiswa*/}
                 {user?.role === "Mahasiswa" && <div>

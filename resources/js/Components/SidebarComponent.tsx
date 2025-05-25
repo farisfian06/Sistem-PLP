@@ -7,7 +7,9 @@ import {
     HiUser,
     HiUsers,
     HiDatabase,
-    HiTable
+    HiTable,
+    HiDocumentText,
+    HiAcademicCap
 } from "react-icons/hi";
 import {FaUserCircle} from "react-icons/fa";
 import {Link, router, usePage} from "@inertiajs/react";
@@ -41,16 +43,19 @@ const SidebarComponent: React.FC = () => {
     } else if (auth.user?.role === "Guru" || auth.user?.role === "Dosen Pembimbing") {
         navItems = [
             {href: route('dashboard'), label: "Dashboard", icon: <HiChartPie className="w-5 h-5"/>},
+            {href: route('input-akun-mahasiswa'), label: "Data Mahasiswa", icon: <HiAcademicCap  className="w-5 h-5"/>},
             {href: route('logbooks.validasi'), label: "Validasi Logbook", icon: <HiBookOpen className="w-5 h-5"/>},
         ];
     } else if (auth.user?.role === "Kaprodi" || auth.user?.role === "Dosen Koordinator" || auth.user?.role === "Akademik") {
         navItems = [
             {href: route('dashboard'), label: "Dashboard", icon: <HiChartPie className="w-5 h-5"/>},
+            {href: route('input-akun-mahasiswa'), label: "Data Mahasiswa", icon: <HiAcademicCap  className="w-5 h-5"/>},
             {href: route('pembagian-plp'), label: "Pembagian PLP", icon: <HiTable className="w-5 h-5"/>},
+            {href: route('logbooks.indexAll'), label: "Logbook Mahasiswa", icon: <HiDocumentText className="w-5 h-5"/>},
             {
                 icon: <HiUsers className="w-5 h-5"/>, label: "Kelola Akun", collapse: [
                     {href: route('input-akun-pamong'), label: "Akun Guru Pamong"},
-                    {href: route('input-akun-dosen'), label: "Akun Dosen"},
+                    {href: route('input-akun-dosen'), label: "Akun Dospem"},
                 ]
             },
             {
@@ -64,14 +69,16 @@ const SidebarComponent: React.FC = () => {
     } else if (auth.user?.role === "Admin") {
         navItems = [
             {href: route('dashboard'), label: "Dashboard", icon: <HiChartPie className="w-5 h-5"/>},
+            {href: route('input-akun-mahasiswa'), label: "Data Mahasiswa", icon: <HiAcademicCap  className="w-5 h-5"/>},
             {href: route('pembagian-plp'), label: "Pembagian PLP", icon: <HiTable className="w-5 h-5"/>},
+            {href: route('logbooks.indexAll'), label: "Logbook Mahasiswa", icon: <HiDocumentText className="w-5 h-5"/>},
             {
                 icon: <HiUsers className="w-5 h-5"/>, label: "Kelola Akun", collapse: [
                     {href: route('input-akun-kaprodi'), label: "Akun Kaprodi"},
                     {href: route('input-akun-koordinator'), label: "Akun Dosen Koordinator"},
                     {href: route('input-akun-akademik'), label: "Akun Akademik"},
                     {href: route('input-akun-pamong'), label: "Akun Guru Pamong"},
-                    {href: route('input-akun-dosen'), label: "Akun Dosen"},
+                    {href: route('input-akun-dosen'), label: "Akun Dospem"},
                 ]
             },
             {
