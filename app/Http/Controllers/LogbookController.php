@@ -16,64 +16,64 @@ class LogbookController extends Controller
     public function index()
     {
         // Get the user's logbooks directly without approver relations
-    $logbooks = Logbook::where('user_id', Auth::id())
-        ->latest()
-        ->get();
+        $logbooks = Logbook::where('user_id', Auth::id())
+            ->latest()
+            ->get();
 
-    if (request()->wantsJson()) {
-        return response()->json($logbooks, 200);
+        if (request()->wantsJson()) {
+            return response()->json($logbooks, 200);
+        }
+
+        return Inertia::render('Logbooks', [
+            'logbooks' => $logbooks
+        ]);
     }
+    // Get the user's logbooks with the related approvers and their information
+    // $logbooks = Logbook::with(['logbookApprovers.approver:id,name,role'])
+    //     ->where('user_id', Auth::id())
+    //     ->latest()
+    //     ->get();
 
-    return Inertia::render('Logbooks', [
-        'logbooks' => $logbooks
-    ]);
-        // Get the user's logbooks with the related approvers and their information
-        // $logbooks = Logbook::with(['logbookApprovers.approver:id,name,role'])
-        //     ->where('user_id', Auth::id())
-        //     ->latest()
-        //     ->get();
+    // // Transform the logbooks to include the calculated approval status
+    // $transformedLogbooks = $logbooks->map(function ($logbook) {
+    //     // Get approvals for this logbook
+    //     $approvals = $logbook->logbookApprovers;
 
-        // // Transform the logbooks to include the calculated approval status
-        // $transformedLogbooks = $logbooks->map(function ($logbook) {
-        //     // Get approvals for this logbook
-        //     $approvals = $logbook->logbookApprovers;
+    //     // Count the different statuses
+    //     $approvedCount = $approvals->where('status', 'approved')->count();
+    //     $rejectedCount = $approvals->where('status', 'rejected')->count();
+    //     $totalApprovers = $approvals->count();
 
-        //     // Count the different statuses
-        //     $approvedCount = $approvals->where('status', 'approved')->count();
-        //     $rejectedCount = $approvals->where('status', 'rejected')->count();
-        //     $totalApprovers = $approvals->count();
+    //     // Calculate the collective status
+    //     $collectiveStatus = 'pending';
+    //     if ($rejectedCount > 0) {
+    //         $collectiveStatus = 'rejected';
+    //     } elseif ($approvedCount === $totalApprovers && $totalApprovers > 0) {
+    //         $collectiveStatus = 'approved';
+    //     }
 
-        //     // Calculate the collective status
-        //     $collectiveStatus = 'pending';
-        //     if ($rejectedCount > 0) {
-        //         $collectiveStatus = 'rejected';
-        //     } elseif ($approvedCount === $totalApprovers && $totalApprovers > 0) {
-        //         $collectiveStatus = 'approved';
-        //     }
+    //     // Include all the original logbook data plus the calculated status
+    //     return [
+    //         'id' => $logbook->id,
+    //         'user_id' => $logbook->user_id,
+    //         'tanggal' => $logbook->tanggal,
+    //         'keterangan' => $logbook->keterangan,
+    //         'mulai' => $logbook->mulai,
+    //         'selesai' => $logbook->selesai,
+    //         'dokumentasi' => $logbook->dokumentasi,
+    //         'created_at' => $logbook->created_at,
+    //         'updated_at' => $logbook->updated_at,
+    //         'status' => $collectiveStatus, // The calculated status based on approvers
+    //     ];
+    // });
 
-        //     // Include all the original logbook data plus the calculated status
-        //     return [
-        //         'id' => $logbook->id,
-        //         'user_id' => $logbook->user_id,
-        //         'tanggal' => $logbook->tanggal,
-        //         'keterangan' => $logbook->keterangan,
-        //         'mulai' => $logbook->mulai,
-        //         'selesai' => $logbook->selesai,
-        //         'dokumentasi' => $logbook->dokumentasi,
-        //         'created_at' => $logbook->created_at,
-        //         'updated_at' => $logbook->updated_at,
-        //         'status' => $collectiveStatus, // The calculated status based on approvers
-        //     ];
-        // });
+    // if (request()->wantsJson()) {
+    //     return response()->json($transformedLogbooks, 200); // Changed status code to 200 which is more appropriate for GET requests
+    // }
 
-        // if (request()->wantsJson()) {
-        //     return response()->json($transformedLogbooks, 200); // Changed status code to 200 which is more appropriate for GET requests
-        // }
-
-        // return Inertia::render('Logbooks', [
-        //     'logbooks' => $transformedLogbooks
-        // ]);
-    }
+    // return Inertia::render('Logbooks', [
+    //     'logbooks' => $transformedLogbooks
+    // ]);
 
     public function indexAll()
     {
@@ -93,47 +93,19 @@ class LogbookController extends Controller
         $user = Auth::user();
 
         // Get logbooks that need approval from this user
-        // Load all approvers to check the complete status
         $logbooks = Logbook::whereHas('logbookApprovers', function ($query) use ($user) {
             $query->where('approver_id', $user->id);
         })
-            ->with(['user:id,name', 'logbookApprovers.approver:id,name,role'])
+            ->with(['user:id,name', 'logbookApprovers' => function ($query) use ($user) {
+                $query->where('approver_id', $user->id);
+            }])
             ->latest()
             ->get();
 
-        $logbooks->transform(function ($logbook) use ($user) {
-            // Get all approvals for this logbook
-            $allApprovals = $logbook->logbookApprovers;
-
-            // Count statistics for all approvers
-            $approvedCount = $allApprovals->where('status', 'approved')->count();
-            $rejectedCount = $allApprovals->where('status', 'rejected')->count();
-            $pendingCount = $allApprovals->where('status', 'pending')->count();
-            $totalApprovers = $allApprovals->count();
-
+        $logbooks->transform(function ($logbook) {
             // Get current user's approval status
-            $userApproval = $allApprovals->firstWhere('approver_id', $user->id);
+            $userApproval = $logbook->logbookApprovers->first();
             $userApprovalStatus = $userApproval ? $userApproval->status : 'pending';
-
-            // Determine collective status
-            $collectiveStatus = 'pending';
-            if ($rejectedCount > 0) {
-                $collectiveStatus = 'rejected';
-            } elseif ($approvedCount === $totalApprovers && $totalApprovers > 0) {
-                $collectiveStatus = 'approved';
-            }
-
-            // Map all approvers' status
-            $approversStatus = $allApprovals->map(function ($approval) {
-                return [
-                    'id' => $approval->id,
-                    'approver_id' => $approval->approver_id,
-                    'name' => $approval->approver->name,
-                    'role' => $approval->approver->role,
-                    'status' => $approval->status,
-                    'updated_at' => $approval->updated_at,
-                ];
-            });
 
             return [
                 'id' => $logbook->id,
@@ -145,7 +117,7 @@ class LogbookController extends Controller
                 'dokumentasi' => $logbook->dokumentasi,
                 'created_at' => $logbook->created_at,
                 'updated_at' => $logbook->updated_at,
-                'status' => $collectiveStatus,
+                'status' => $logbook->status,
                 'your_approval_status' => $userApprovalStatus,
             ];
         });
@@ -158,6 +130,77 @@ class LogbookController extends Controller
             'logbooks' => $logbooks
         ]);
     }
+
+    // public function indexByGuru()
+    // {
+    //     $user = Auth::user();
+
+    //     // Get logbooks that need approval from this user
+    //     // Load all approvers to check the complete status
+    //     $logbooks = Logbook::whereHas('logbookApprovers', function ($query) use ($user) {
+    //         $query->where('approver_id', $user->id);
+    //     })
+    //         ->with(['user:id,name', 'logbookApprovers.approver:id,name,role'])
+    //         ->latest()
+    //         ->get();
+
+    //     $logbooks->transform(function ($logbook) use ($user) {
+    //         // Get all approvals for this logbook
+    //         $allApprovals = $logbook->logbookApprovers;
+
+    //         // Count statistics for all approvers
+    //         $approvedCount = $allApprovals->where('status', 'approved')->count();
+    //         $rejectedCount = $allApprovals->where('status', 'rejected')->count();
+    //         $pendingCount = $allApprovals->where('status', 'pending')->count();
+    //         $totalApprovers = $allApprovals->count();
+
+    //         // Get current user's approval status
+    //         $userApproval = $allApprovals->firstWhere('approver_id', $user->id);
+    //         $userApprovalStatus = $userApproval ? $userApproval->status : 'pending';
+
+    //         // Determine collective status
+    //         $collectiveStatus = 'pending';
+    //         if ($rejectedCount > 0) {
+    //             $collectiveStatus = 'rejected';
+    //         } elseif ($approvedCount === $totalApprovers && $totalApprovers > 0) {
+    //             $collectiveStatus = 'approved';
+    //         }
+
+    //         // Map all approvers' status
+    //         $approversStatus = $allApprovals->map(function ($approval) {
+    //             return [
+    //                 'id' => $approval->id,
+    //                 'approver_id' => $approval->approver_id,
+    //                 'name' => $approval->approver->name,
+    //                 'role' => $approval->approver->role,
+    //                 'status' => $approval->status,
+    //                 'updated_at' => $approval->updated_at,
+    //             ];
+    //         });
+
+    //         return [
+    //             'id' => $logbook->id,
+    //             'user' => $logbook->user->name,
+    //             'tanggal' => $logbook->tanggal,
+    //             'keterangan' => $logbook->keterangan,
+    //             'mulai' => $logbook->mulai,
+    //             'selesai' => $logbook->selesai,
+    //             'dokumentasi' => $logbook->dokumentasi,
+    //             'created_at' => $logbook->created_at,
+    //             'updated_at' => $logbook->updated_at,
+    //             'status' => $collectiveStatus,
+    //             'your_approval_status' => $userApprovalStatus,
+    //         ];
+    //     });
+
+    //     if (request()->wantsJson()) {
+    //         return response()->json($logbooks, 200);
+    //     }
+
+    //     return Inertia::render('ValidasiLogbook', [
+    //         'logbooks' => $logbooks
+    //     ]);
+    // }
 
 
     /**
