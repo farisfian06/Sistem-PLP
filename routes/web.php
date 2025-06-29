@@ -12,6 +12,7 @@ use App\Http\Controllers\SmkController;
 use App\Http\Controllers\ValidasiLogbookController;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 // Redirect ke login/dashboard saat buka website

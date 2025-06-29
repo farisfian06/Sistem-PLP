@@ -15,53 +15,64 @@ class LogbookController extends Controller
 {
     public function index()
     {
+        // Get the user's logbooks directly without approver relations
+    $logbooks = Logbook::where('user_id', Auth::id())
+        ->latest()
+        ->get();
+
+    if (request()->wantsJson()) {
+        return response()->json($logbooks, 200);
+    }
+
+    return Inertia::render('Logbooks', [
+        'logbooks' => $logbooks
+    ]);
         // Get the user's logbooks with the related approvers and their information
-        $logbooks = Logbook::with(['logbookApprovers.approver:id,name,role'])
-            ->where('user_id', Auth::id())
-            ->latest()
-            ->get();
+        // $logbooks = Logbook::with(['logbookApprovers.approver:id,name,role'])
+        //     ->where('user_id', Auth::id())
+        //     ->latest()
+        //     ->get();
 
-        // Transform the logbooks to include the calculated approval status
-        $transformedLogbooks = $logbooks->map(function ($logbook) {
-            // Get approvals for this logbook
-            $approvals = $logbook->logbookApprovers;
+        // // Transform the logbooks to include the calculated approval status
+        // $transformedLogbooks = $logbooks->map(function ($logbook) {
+        //     // Get approvals for this logbook
+        //     $approvals = $logbook->logbookApprovers;
 
-            // Count the different statuses
-            $approvedCount = $approvals->where('status', 'approved')->count();
-            $rejectedCount = $approvals->where('status', 'rejected')->count();
-            $pendingCount = $approvals->where('status', 'pending')->count();
-            $totalApprovers = $approvals->count();
+        //     // Count the different statuses
+        //     $approvedCount = $approvals->where('status', 'approved')->count();
+        //     $rejectedCount = $approvals->where('status', 'rejected')->count();
+        //     $totalApprovers = $approvals->count();
 
-            // Calculate the collective status
-            $collectiveStatus = 'pending';
-            if ($rejectedCount > 0) {
-                $collectiveStatus = 'rejected';
-            } elseif ($approvedCount === $totalApprovers && $totalApprovers > 0) {
-                $collectiveStatus = 'approved';
-            }
+        //     // Calculate the collective status
+        //     $collectiveStatus = 'pending';
+        //     if ($rejectedCount > 0) {
+        //         $collectiveStatus = 'rejected';
+        //     } elseif ($approvedCount === $totalApprovers && $totalApprovers > 0) {
+        //         $collectiveStatus = 'approved';
+        //     }
 
-            // Include all the original logbook data plus the calculated status
-            return [
-                'id' => $logbook->id,
-                'user_id' => $logbook->user_id,
-                'tanggal' => $logbook->tanggal,
-                'keterangan' => $logbook->keterangan,
-                'mulai' => $logbook->mulai,
-                'selesai' => $logbook->selesai,
-                'dokumentasi' => $logbook->dokumentasi,
-                'created_at' => $logbook->created_at,
-                'updated_at' => $logbook->updated_at,
-                'status' => $collectiveStatus, // The calculated status based on approvers
-            ];
-        });
+        //     // Include all the original logbook data plus the calculated status
+        //     return [
+        //         'id' => $logbook->id,
+        //         'user_id' => $logbook->user_id,
+        //         'tanggal' => $logbook->tanggal,
+        //         'keterangan' => $logbook->keterangan,
+        //         'mulai' => $logbook->mulai,
+        //         'selesai' => $logbook->selesai,
+        //         'dokumentasi' => $logbook->dokumentasi,
+        //         'created_at' => $logbook->created_at,
+        //         'updated_at' => $logbook->updated_at,
+        //         'status' => $collectiveStatus, // The calculated status based on approvers
+        //     ];
+        // });
 
-        if (request()->wantsJson()) {
-            return response()->json($transformedLogbooks, 200); // Changed status code to 200 which is more appropriate for GET requests
-        }
+        // if (request()->wantsJson()) {
+        //     return response()->json($transformedLogbooks, 200); // Changed status code to 200 which is more appropriate for GET requests
+        // }
 
-        return Inertia::render('Logbooks', [
-            'logbooks' => $transformedLogbooks
-        ]);
+        // return Inertia::render('Logbooks', [
+        //     'logbooks' => $transformedLogbooks
+        // ]);
     }
 
     public function indexAll()
