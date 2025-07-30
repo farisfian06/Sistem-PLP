@@ -24,7 +24,7 @@ const ValidasiLogbook = () => {
     const fetchedLogbooks = Array.isArray(props.logbooks)
         ? props.logbooks.map(logbook => ({
             ...logbook,
-            checked: false // Default all to unchecked
+            checked: false
         }))
         : [];
 

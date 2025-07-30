@@ -90,7 +90,7 @@ export default function Login({
                             }
                         />
                         <span className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                            Remember me
+                            Ingat saya
                         </span>
 
                     </label>
