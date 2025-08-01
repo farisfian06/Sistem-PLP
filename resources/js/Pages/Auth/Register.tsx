@@ -79,6 +79,7 @@ export default function Register() {
                         id="email"
                         type="email"
                         name="email"
+                        placeholder="Gunakan email UB - Contoh: mahasiswa@student.ub.ac.id"
                         value={data.email}
                         className="mt-1 block w-full"
                         autoComplete="username"
