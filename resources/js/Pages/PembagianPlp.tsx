@@ -154,7 +154,7 @@ const PembagianPlp = () => {
                     </Alert>
                 }
 
-                <div className="p-4 border rounded-lg bg-white shadow-md">
+                <div className="p-4 border rounded-lg bg-white shadow-md overflow-x-auto">
                     <div className="flex justify-between mb-4">
                         <Button color="blue" onClick={handleSubmit}>
                             Update
@@ -164,9 +164,9 @@ const PembagianPlp = () => {
                                 className="text-lg"/>Terdapat perubahan belum disimpan</span>
                         }
                     </div>
-                    <Table striped hoverable>
+                    <Table striped  hoverable className="table-auto w-full">
                         <TableHead>
-                            <TableRow>
+                            <TableRow className="text-center">
                                 <TableHeadCell>No</TableHeadCell>
                                 <TableHeadCell>NIM</TableHeadCell>
                                 <TableHeadCell>Nama Mahasiswa</TableHeadCell>
@@ -174,13 +174,15 @@ const PembagianPlp = () => {
                                 <TableHeadCell>Penempatan SMK</TableHeadCell>
                                 <TableHeadCell>Dosen Pembimbing</TableHeadCell>
                                 <TableHeadCell>Guru Pamong</TableHeadCell>
-                                <TableHeadCell className="text-center">Aksi</TableHeadCell>
+                                 <TableHeadCell>Tanggal Mulai</TableHeadCell>
+                                 <TableHeadCell>Tanggal Akhir</TableHeadCell>
+                                <TableHeadCell >Aksi</TableHeadCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {pendaftaranPlp.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan={5} className="text-center">
+                                    <TableCell colSpan={10} className="text-center">
                                         Belum ada data
                                     </TableCell>
                                 </TableRow>

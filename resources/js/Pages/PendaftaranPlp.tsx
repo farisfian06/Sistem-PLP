@@ -1,12 +1,13 @@
 import React, {useState, useEffect} from "react";
 import SidebarComponent from "@/Components/SidebarComponent";
 import {HiCheckCircle, HiExclamation} from "react-icons/hi";
-import { TextInput, Label, Select, Button, Alert } from "flowbite-react";
+import { TextInput, Label, Select, Button, Alert, Checkbox } from "flowbite-react";
 import {Head, router, usePage} from "@inertiajs/react";
 import {PendaftaranProps} from "@/types/types";
 import AddUpdateAkunDosen from "@/Components/AddUpdateAkunDosen";
 import ConfirmationModal from "@/Components/ConfirmationModal";
 import PositiveConfirmationModal from "@/Components/PositiveConfirmationModal";
+import TermsModal from "@/Components/TermsModal";
 
 // model props user yang diambil
 type User = {
@@ -26,7 +27,7 @@ export default function PendaftaranPlp() {
     const [formData, setFormData] = useState({
         namaLengkap: "",
         angkatan: "",
-        bidangKeahlian: "",
+       bidangKeahlian: "",
         nilaiPlp1: "",
         nilaiMicroTeaching: "",
         pilihanSmk1: "",
@@ -72,6 +73,8 @@ export default function PendaftaranPlp() {
 
     };
 
+    const [agreeTerms, setAgreeTerms] = useState(false);
+const [showTerms, setShowTerms] = useState(false);
     const handleSubmit = async () => {
         setProcessing(true);
         // Mengirim formData ke backend
@@ -155,23 +158,34 @@ export default function PendaftaranPlp() {
                 label: keminatan.name
             })),
         },
-        {
-            label: "Nilai PLP 1",
-            name: "nilaiPlp1",
-            type: "select",
-            value: formData.nilaiPlp1,
-            placeholder: "Pilih Nilai Plp I",
-            options: [
-                { value: "A", label: "A" },
-                { value: "B+", label: "B+" },
-                { value: "B", label: "B" },
-                { value: "C+", label: "C+" },
-                { value: "C", label: "C" },
-                { value: "D", label: "D" },
-                { value: "E", label: "E" },
-                { value: "Belum", label: "Belum" },
-            ],
+         {
+            label: "SKS Lulus",
+            name: "sksLulus",
+            type: "text",
+            value: formData.bidangKeahlian,
+            placeholder: "Input SKS Lulus",
+            options: keminatans.map(keminatan => ({
+                value: keminatan.id,
+                label: keminatan.name
+            })),
         },
+        // {
+        //     label: "Nilai PLP 1",
+        //     name: "nilaiPlp1",
+        //     type: "select",
+        //     value: formData.nilaiPlp1,
+        //     placeholder: "Pilih Nilai Plp I",
+        //     options: [
+        //         { value: "A", label: "A" },
+        //         { value: "B+", label: "B+" },
+        //         { value: "B", label: "B" },
+        //         { value: "C+", label: "C+" },
+        //         { value: "C", label: "C" },
+        //         { value: "D", label: "D" },
+        //         { value: "E", label: "E" },
+        //         { value: "Belum", label: "Belum" },
+        //     ],
+        // },
         {
             label: "Nilai Micro Teaching",
             name: "nilaiMicroTeaching",
@@ -276,6 +290,28 @@ export default function PendaftaranPlp() {
                             </div>
                         ))}
                     </div>
+
+                    {/* Checkbox dengan link syarat dan ketentuan */}
+                    <div className="m-4">
+                    <label className="flex items-center gap-2">
+                    <input
+                        type="checkbox"
+                        checked={agreeTerms}
+                        onChange={() => setAgreeTerms(!agreeTerms)}
+                    />
+                    <span>
+                        Saya menerima{" "}
+                        <button
+                        type="button"
+                        onClick={() => setShowTerms(true)}
+                        className="text-blue-600 cursor-pointer"
+                        >
+                        syarat dan ketentuan
+                        </button>
+                    </span>
+                    </label>
+                    </div>
+
                     <Button type="submit"
                             disabled={sudahDaftar}
                             className={`w-fit text-white px-5 py-2.5 ${sudahDaftar ? "cursor-not-allowed bg-neutral-500 " : "bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 "}`}>
@@ -283,6 +319,9 @@ export default function PendaftaranPlp() {
                     </Button>
                 </form>
             </div>
+
+            <TermsModal open={showTerms} onClose={() => setShowTerms(false)} />
+                
             <PositiveConfirmationModal
                 open={openConfirmation}
                 onClose={() => {
