@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -43,7 +44,6 @@ class ProfileController extends Controller
         $user->email = $validated['email'];
 
         // Handle the JSON details field
-
         $details = $user->details ? json_decode($user->details, true) : [];
         if($details != null) {
 
@@ -71,7 +71,17 @@ class ProfileController extends Controller
             $user->email_verified_at = null;
         }
 
-        $user->save();
+        try {
+            $user->save();
+        } catch (\Exception $e) {
+            Log::error('Profile update failed for user ID ' . $user->id . ': ' . $e->getMessage(), [
+                'user_id' => $user->id,
+                'input' => $validated,
+                'exception' => $e
+            ]);
+            // Optionally you may redirect back with error
+            return Redirect::route('profile.edit')->with('status', 'Update gagal. Silakan coba lagi.');
+        }
 
         return Redirect::route('profile.edit');
     }
